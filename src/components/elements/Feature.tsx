@@ -1,0 +1,52 @@
+"use client"
+import React, { useEffect, useRef } from 'react';
+import { TrendingUp, Home, Globe } from 'lucide-react';
+
+
+const FeaturesSection = () => {
+  const sectionRef = useRef(null);
+
+
+  const features = [
+    {
+      icon: TrendingUp,
+      title: "Revenue Management",
+      description: "Timely and accurate billing and payment processing to ensure smooth cash flow. No hidden & extra charges.",
+      color: "emerald"
+    },
+    {
+      icon: Home,
+      title: "Maintenance Management",
+      description: "Fast Maintenance and within 24 hours response time. Completely free of cost and satisfying.",
+      color: "blue"
+    },
+    {
+      icon: Globe,
+      title: "24/7 Support",
+      description: "Any query or any issue, we are available 24/7 to assist you and to listen you.",
+      color: "purple"
+    }
+  ];
+
+  return (
+    <section className="py-32 mask-b-from-80% bg-zinc-950 relative px-4 sm:px-6">
+      <div className="container mx-auto">
+        <div className="max-w-4xl mx-auto space-y-8 sm:space-y-12">
+          {features.map((feature, i) => (
+            <div key={i} className="feature-card flex flex-col sm:flex-row gap-4 sm:gap-6 lg:gap-8 items-start group">
+              <div className={`flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-${feature.color}-500/10 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform border border-${feature.color}-500/20`}>
+                <feature.icon className={`w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-${feature.color}-400`} />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-3">{feature.title}</h3>
+                <p className="text-gray-400 text-base sm:text-lg leading-relaxed">{feature.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default FeaturesSection;
