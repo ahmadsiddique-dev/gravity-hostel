@@ -28,7 +28,7 @@ export const StudentSignupSchema = z
         .max(40, { message: "Guardian name must be less than 40 characters" }),
       guardianPhoneNO: z
         .string()
-        .length(13, { message: "Phone number must be exactly 13 digits." })
+        .length(11, { message: "Phone number must be exactly 13 digits." })
         .regex(/^\d+$/, {
           message: "Phone number must contain only digits.",
         }),
@@ -44,23 +44,18 @@ export const StudentSignupSchema = z
           message: "Password must be less than 100 characters long.",
         }),
       roomNumber: z
-        .string({ message: "Password is required field" })
-        .min(1, { message: "Room is required field" }),
-      type: z.enum(["standard", "delux", "suite"], {
+        .string({ message: "Room number is required field." }),
+      type: z.enum(["standard", "deluxe", "suite"], {
         message: "Type is not valide",
       }),
       capacity: z
-        .number({ message: "Capacity is required field" })
-        .min(1, { message: "Capacity must be at least 1." }),
+        .number({ message: "Capacity is required field" }),
       price: z
         .number({ message: "Price is required field" })
         .min(10, { message: "Price must be at least 10." }),
       status: z.enum(["available", "maintenance", "occupied"], {
         message: "Invalided option",
       }),
-      floor: z
-        .number({ message: "This is a required field" })
-        .lte(3, { message: "There are only three floor" }),
     }),
     confirmPassword: z.string({
       message: "Confirm Password is required field",

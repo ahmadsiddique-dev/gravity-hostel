@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { use, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import axios from "axios";
 
 const STEP_FIELDS = {
   1: ["studentDetail.studentName", "studentDetail.studentcnic", "studentDetail.studentPhoneNO", "studentDetail.studentEmail"],
@@ -32,16 +33,17 @@ export default function Page() {
     progressValue: 33,
     currentStep: 1,
   });
+  const [rooms, setRooms] = React.useState<{ number: number }[]>([]);
 
   const form = useForm<z.infer<typeof StudentSignupSchema>>({
     resolver: zodResolver(StudentSignupSchema),
-    mode: "onChange",
+    mode: "onTouched",
     defaultValues: {
       studentDetail: { studentName: "", studentcnic: "", studentPhoneNO: "", studentEmail: "" },
       guardianDetail: { guardianName: "", guardianPhoneNO: "", address: "" },
       loginCredientials: { 
-        password: "", capacity: 1, floor: 1, roomNumber: "", 
-        type: "standard", price: 15000, status: "available" 
+        password: "", capacity: 1, type: "standard", 
+        roomNumber: "", price: 15000, status: "available" 
       },
       confirmPassword: "",
     },
@@ -60,7 +62,7 @@ export default function Page() {
   }, [form.watch]);
 
   const handleNext = async () => {
-    const fields = STEP_FIELDS[stepper.currentStep as keyof typeof STEP_FIELDS];
+    const fields = STEP_FIELDS[stepper.currentStep as keyof typeof STEP_FIELDS]; // Unable to understand this one
     if (await form.trigger(fields as any)) {
       setStepper((prev) => ({
         currentStep: Math.min(3, prev.currentStep + 1),
@@ -71,6 +73,12 @@ export default function Page() {
     }
   };
 
+  const watchedRoomType = form.watch("loginCredientials.type");
+
+  useEffect(() => {
+    handleRooms();
+  }, [watchedRoomType]);
+
   const handlePrevious = () => {
     setStepper((prev) => ({
       currentStep: Math.max(1, prev.currentStep - 1),
@@ -78,13 +86,34 @@ export default function Page() {
     }));
   };
 
+  const handleRooms = async () => {
+    const type = watchedRoomType; 
+    
+    if (!type) return;
+
+    try { 
+      const res = await axios.post("/api/a/register-student/getrooms", { type });
+      setRooms(res.data.rooms);
+      return res.data.rooms as { number: number }[];
+    } catch (e) {
+      toast.error("Failed to fetch rooms.");
+      return [];
+    }
+  };
+
+  const handleSubmit = async (data: z.infer<typeof StudentSignupSchema>) => {
+
+    console.log("Submitted data:", data);
+    // try {
+    //   await axios.post("/api/a/register-student", data);
+    // }catch (e) {
+    //   toast.error("Failed to register student.");
+    //   return;
+    // }
+  }
   return (
     <div className="px-4 py-6">
-      <form onSubmit={form.handleSubmit((data) => {
-        console.log(data);
-        toast.success("Registered!");
-        localStorage.removeItem("student-registration-data");
-      })} className="max-w-2xl mx-auto flex flex-col gap-4">
+      <form onSubmit={form.handleSubmit(handleSubmit, (errors) => console.log("VALIDATION FAILED:", errors))} className="max-w-2xl mx-auto flex flex-col gap-4">
         
         <h2 className="text-2xl font-semibold text-center">Register Student</h2>
 
@@ -109,16 +138,11 @@ export default function Page() {
           )}
 
           {stepper.currentStep === 3 && (
-            <div className="grid gap-3">
-              <div className="grid grid-cols-2 gap-3">
-                <FormField name="loginCredientials.roomNumber" label="Room #" control={form.control} />
-                <div className="flex flex-col gap-1.5">
-                  <Label>Floor</Label>
-                  <Input type="number" {...form.register("loginCredientials.floor", { valueAsNumber: true })} />
-                </div>
-              </div>
+            <div className="grid gap-2">
+              
 
-              <div className="flex flex-col gap-1.5">
+              <div className="flex w-full gap-3 items-center">
+                <div className="flex flex-col gap-1.5">
                 <Label>Room Type</Label>
                 <Controller
                   name="loginCredientials.type"
@@ -128,12 +152,31 @@ export default function Page() {
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="standard">Standard</SelectItem>
-                        <SelectItem value="delux">Deluxe</SelectItem>
+                        <SelectItem value="deluxe">Deluxe</SelectItem>
                         <SelectItem value="suite">Suite</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
                 />
+              </div>
+
+              <div className="grid gap-3">
+                <Label>Room Number</Label>
+                <Controller
+                  name="loginCredientials.roomNumber"
+                  control={form.control}
+                  render={({ field }) => (
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        {rooms.map((room) => (
+                          <SelectItem key={room.number} value={room.number.toString()}>{room.number}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">

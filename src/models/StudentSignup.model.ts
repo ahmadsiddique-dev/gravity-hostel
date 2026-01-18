@@ -18,6 +18,11 @@ const StudentSchema: Schema<StudentSignup> = new Schema({
   },
   loginCredientials: {
     password: { type: String, required: true },
+    capacity: { type: Number, required: true },
+    type: { type: String, required: true },
+    roomNumber: { type: String, required: true },
+    price: { type: Number, required: true },
+    status: { type: String, required: true },
   },
 }, { timestamps: true });
 
