@@ -18,20 +18,10 @@ export default function NotificationComposer() {
 
   return (
     <div className="p-4 md:p-8 max-w-4xl mx-auto space-y-6">
-      {/* Page Header */}
-      {/* <div className="space-y-1">
-        <h1 className="text-3xl font-bold tracking-tight">Notifications</h1>
-        <p className="text-muted-foreground">Send announcements to students.</p>
-      </div> */}
 
       <Card className="bg-card border-border">
-        {/* <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl">Compose Message</CardTitle>
-          <CardDescription>Select audience and write your message.</CardDescription>
-        </CardHeader> */}
 
         <CardContent className="space-y-8">
-          {/* Target Audience Selector */}
           <div className="space-y-3">
             <Label className="text-sm font-semibold">Target Audience</Label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -61,7 +51,6 @@ export default function NotificationComposer() {
             </div>
           </div>
 
-          {/* Conditional Student Selection */}
           {target === "specific" && (
             <div className="space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
               <Label className="text-sm font-semibold">Select Student</Label>
@@ -77,13 +66,11 @@ export default function NotificationComposer() {
               </Select>
             </div>
           )}
-
-          {/* Message Textarea */}
           <div className="space-y-3">
             <Label className="text-sm font-semibold">Message</Label>
             <Textarea
               placeholder="Type your announcement here..."
-              className="min-h-[150px] bg-secondary/30 border-border resize-none focus-visible:ring-primary/20"
+              className="min-h-37.5 bg-secondary/30 border-border resize-none focus-visible:ring-primary/20"
             />
           </div>
 

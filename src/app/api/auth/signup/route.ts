@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken'
 export async function POST(request:Request) {
     const {fullName, email, password} = await request.json();
 
+    console.log("Received signup data:", {fullName, email, password});
     if (!fullName || !email || !password) return NextResponse.json({success: false, message: "Credientials are missing"}, {status: 400})
 
     try {

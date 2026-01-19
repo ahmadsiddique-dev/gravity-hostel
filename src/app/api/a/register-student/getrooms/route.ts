@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       },
       {
         $project: {
-          _id: 0,
+          _id: 1, // Now we need id
           number: 1,
         },
       },

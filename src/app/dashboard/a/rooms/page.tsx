@@ -1,4 +1,5 @@
-import React from "react";
+"use client"
+import React, { use, useEffect, useState } from "react";
 import { 
   Plus, User, Bed, Banknote, MapPin, Users, X 
 } from "lucide-react";
@@ -15,219 +16,59 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import axios from "axios";
+import { toast } from "sonner";
 
-const roomsData = [
-  { 
-    id: "101", 
-    type: "Standard", 
-    current: 2, 
-    total: 3, 
-    price: "15,000 PKR", 
-    floor: "1",
-    occupants: [
-      { name: "Junaid Akram", cnic: "35211-1234576-1" },
-      { name: "Wahab Riaz", cnic: "35222-1234587-3" }
-    ]
-  },
-  { 
-    id: "101", 
-    type: "Standard", 
-    current: 2, 
-    total: 3, 
-    price: "15,000 PKR", 
-    floor: "1",
-    occupants: [
-      { name: "Junaid Akram", cnic: "35211-1234576-1" },
-      { name: "Wahab Riaz", cnic: "35222-1234587-3" }
-    ]
-  },
-  { 
-    id: "101", 
-    type: "Standard", 
-    current: 2, 
-    total: 3, 
-    price: "15,000 PKR", 
-    floor: "1",
-    occupants: [
-      { name: "Junaid Akram", cnic: "35211-1234576-1" },
-      { name: "Wahab Riaz", cnic: "35222-1234587-3" }
-    ]
-  },
-  { 
-    id: "101", 
-    type: "Standard", 
-    current: 2, 
-    total: 3, 
-    price: "15,000 PKR", 
-    floor: "1",
-    occupants: [
-      { name: "Junaid Akram", cnic: "35211-1234576-1" },
-      { name: "Wahab Riaz", cnic: "35222-1234587-3" }
-    ]
-  },
-  { 
-    id: "101", 
-    type: "Standard", 
-    current: 2, 
-    total: 3, 
-    price: "15,000 PKR", 
-    floor: "1",
-    occupants: [
-      { name: "Junaid Akram", cnic: "35211-1234576-1" },
-      { name: "Wahab Riaz", cnic: "35222-1234587-3" }
-    ]
-  },
-  { 
-    id: "101", 
-    type: "Standard", 
-    current: 2, 
-    total: 3, 
-    price: "15,000 PKR", 
-    floor: "1",
-    occupants: [
-      { name: "Junaid Akram", cnic: "35211-1234576-1" },
-      { name: "Wahab Riaz", cnic: "35222-1234587-3" }
-    ]
-  },
-  { 
-    id: "101", 
-    type: "Standard", 
-    current: 2, 
-    total: 3, 
-    price: "15,000 PKR", 
-    floor: "1",
-    occupants: [
-      { name: "Junaid Akram", cnic: "35211-1234576-1" },
-      { name: "Wahab Riaz", cnic: "35222-1234587-3" }
-    ]
-  },
-  { 
-    id: "101", 
-    type: "Standard", 
-    current: 2, 
-    total: 3, 
-    price: "15,000 PKR", 
-    floor: "1",
-    occupants: [
-      { name: "Junaid Akram", cnic: "35211-1234576-1" },
-      { name: "Wahab Riaz", cnic: "35222-1234587-3" }
-    ]
-  },
-  { 
-    id: "101", 
-    type: "Standard", 
-    current: 2, 
-    total: 3, 
-    price: "15,000 PKR", 
-    floor: "1",
-    occupants: [
-      { name: "Junaid Akram", cnic: "35211-1234576-1" },
-      { name: "Wahab Riaz", cnic: "35222-1234587-3" }
-    ]
-  },
-  { 
-    id: "101", 
-    type: "Standard", 
-    current: 2, 
-    total: 3, 
-    price: "15,000 PKR", 
-    floor: "1",
-    occupants: [
-      { name: "Junaid Akram", cnic: "35211-1234576-1" },
-      { name: "Wahab Riaz", cnic: "35222-1234587-3" }
-    ]
-  },
-  { 
-    id: "101", 
-    type: "Standard", 
-    current: 2, 
-    total: 3, 
-    price: "15,000 PKR", 
-    floor: "1",
-    occupants: [
-      { name: "Junaid Akram", cnic: "35211-1234576-1" },
-      { name: "Wahab Riaz", cnic: "35222-1234587-3" }
-    ]
-  },
-  { 
-    id: "101", 
-    type: "Standard", 
-    current: 2, 
-    total: 3, 
-    price: "15,000 PKR", 
-    floor: "1",
-    occupants: [
-      { name: "Junaid Akram", cnic: "35211-1234576-1" },
-      { name: "Wahab Riaz", cnic: "35222-1234587-3" }
-    ]
-  },
-  { 
-    id: "101", 
-    type: "Standard", 
-    current: 2, 
-    total: 3, 
-    price: "15,000 PKR", 
-    floor: "1",
-    occupants: [
-      { name: "Junaid Akram", cnic: "35211-1234576-1" },
-      { name: "Wahab Riaz", cnic: "35222-1234587-3" }
-    ]
-  },
-  { 
-    id: "101", 
-    type: "Standard", 
-    current: 2, 
-    total: 3, 
-    price: "15,000 PKR", 
-    floor: "1",
-    occupants: [
-      { name: "Junaid Akram", cnic: "35211-1234576-1" },
-      { name: "Wahab Riaz", cnic: "35222-1234587-3" }
-    ]
-  },
-  { 
-    id: "101", 
-    type: "Standard", 
-    current: 2, 
-    total: 3, 
-    price: "15,000 PKR", 
-    floor: "1",
-    occupants: [
-      { name: "Junaid Akram", cnic: "35211-1234576-1" },
-      { name: "Wahab Riaz", cnic: "35222-1234587-3" }
-    ]
-  },
-  { 
-    id: "101", 
-    type: "Standard", 
-    current: 2, 
-    total: 3, 
-    price: "15,000 PKR", 
-    floor: "1",
-    occupants: [
-      { name: "Junaid Akram", cnic: "35211-1234576-1" },
-      { name: "Wahab Riaz", cnic: "35222-1234587-3" }
-    ]
-  },
-  { 
-    id: "101", 
-    type: "Standard", 
-    current: 2, 
-    total: 3, 
-    price: "15,000 PKR", 
-    floor: "1",
-    occupants: [
-      { name: "Junaid Akram", cnic: "35211-1234576-1" },
-      { name: "Wahab Riaz", cnic: "35222-1234587-3" }
-    ]
-  },
-  // ... other rooms
-];
+// 1. Type for the individual occupant inside a room
+export interface Occupant {
+  name: string;
+  cnic: string;
+}
+
+// 2. Type for the main Room object
+export interface Room {
+  id: number | string;   // Mapped from "$number". Usually number, but safe to allow string
+  type: string;          // e.g., "Single", "Shared"
+  current: number;       // Calculated via $size
+  total: number;         // Mapped from "$capacity"
+  price: string;         // Important: It is a string because you formatted it with "PKR"
+  floor: string;         // Converted via $toString
+  occupants: Occupant[]; // Array of the interface defined above
+}
+
+export interface RoomsApiResponse {
+  success: boolean;
+  rooms: Room[];
+  message?: string; 
+}
 
 export default function RoomManagement() {
+  const [roomsData, setRoomsDate] = useState<Room[]>([]);
+
+
+  const [changed, setChanged] = React.useState(false);
+
+
+  useEffect(() => {
+
+      const fetchData = async () => {
+        const response = await axios.get<RoomsApiResponse>('/api/a/data/rooms');
+        if (response.data.success) {
+          const data = await response.data;
+          setRoomsDate(data.rooms);
+          console.log(data);
+        }
+        else {
+          toast.error("Failed to fetch rooms data.");
+        }
+      }
+
+    fetchData();
+  }, [changed]);
   return (
+
     <div className="p-4 md:p-8 space-y-6">
-      {/* Header */}
+      <Button onClick={() => setChanged(!changed)}>Change me!</Button>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Rooms</h1>
@@ -239,7 +80,6 @@ export default function RoomManagement() {
       </div>
 
       <ScrollArea className="h-[68vh] w-full">
-      {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {roomsData.map((room) => (
           <RoomCard key={room.id} room={room} />
@@ -250,7 +90,7 @@ export default function RoomManagement() {
   );
 }
 
-function RoomCard({ room }: { room: typeof roomsData[0] }) {
+function RoomCard({ room }: { room: Room }) {
   const occupancyPercentage = (room.current / room.total) * 100;
 
   return (
@@ -290,7 +130,7 @@ function RoomCard({ room }: { room: typeof roomsData[0] }) {
               </Button>
             </DialogTrigger>
             
-            <DialogContent className="sm:max-w-[500px] bg-card border-border p-0 overflow-hidden">
+            <DialogContent className="sm:max-w-125 bg-card border-border p-0 overflow-hidden">
               <div className="p-6 space-y-6">
                 <DialogHeader className="flex flex-row justify-between items-start">
                   <div className="space-y-1">

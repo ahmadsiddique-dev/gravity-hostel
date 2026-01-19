@@ -53,9 +53,8 @@ export const StudentSignupSchema = z
       price: z
         .number({ message: "Price is required field" })
         .min(10, { message: "Price must be at least 10." }),
-      status: z.enum(["available", "maintenance", "occupied"], {
-        message: "Invalided option",
-      }),
+      roomid: z
+        .string({ message: "Room ID is required field" }),
     }),
     confirmPassword: z.string({
       message: "Confirm Password is required field",

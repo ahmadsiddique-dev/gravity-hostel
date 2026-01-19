@@ -1,30 +1,62 @@
-import { StudentSignupSchema } from "@/schemas/StudentSignupSchema";
-import mongoose, { Schema, model, Document } from "mongoose";
-import z from "zod";
+import mongoose, { Schema, model, Document, Types } from "mongoose";
 
-export type StudentSignup = z.infer<typeof StudentSignupSchema> & Document
+export interface IStudent extends Document {
+  user: Types.ObjectId;      
+  cnic: string;
+  phone: string;
+  address: string;
+  guardian: {
+    name: string;
+    phone: string;
+  };
+  room: Types.ObjectId;      
+  isActive: boolean;
+  enrollmentDate: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
-const StudentSchema: Schema<StudentSignup> = new Schema({
-  studentDetail: {
-    studentName: { type: String, required: true },
-    studentcnic: { type: String, required: true, unique: true },
-    studentPhoneNO: { type: String, required: true },
-    studentEmail: { type: String, required: true, unique: true },
+const StudentSchema = new Schema<IStudent>(
+  {
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User", 
+      required: true,
+    },
+    cnic: {
+      type: String,
+      required: true,
+      unique: true, 
+    },
+    phone: {
+      type: String,
+      required: true,
+    },
+    address: {
+      type: String,
+      required: true,
+    },
+    guardian: {
+      name: { type: String, required: true },
+      phone: { type: String, required: true },
+    },
+    room: {
+      type: Schema.Types.ObjectId,
+      ref: "Room", 
+      required: true,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    enrollmentDate: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  guardianDetail: {
-    guardianName: { type: String, required: true },
-    guardianPhoneNO: { type: String, required: true },
-    address: { type: String, required: true },
-  },
-  loginCredientials: {
-    password: { type: String, required: true },
-    capacity: { type: Number, required: true },
-    type: { type: String, required: true },
-    roomNumber: { type: String, required: true },
-    price: { type: Number, required: true },
-    status: { type: String, required: true },
-  },
-}, { timestamps: true });
+  { timestamps: true } 
+);
 
-
-export const StudentModel = (mongoose.models.Student ) || model('Student', StudentSchema)
+export const StudentModel =
+  (mongoose.models.Student as mongoose.Model<IStudent>) ||
+  model<IStudent>("Student", StudentSchema);
