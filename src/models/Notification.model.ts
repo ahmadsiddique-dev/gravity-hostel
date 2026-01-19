@@ -1,38 +1,32 @@
-import mongoose, { Schema, model, Document, Types } from 'mongoose';
+import mongoose, { Schema, model, Document } from 'mongoose';
 
-export interface Notification extends Document {
-    title: string;
-    message: string;
-    target: 'all' | 'specific';
-    priority: 'normal' | 'high';
-    readBy: Types.ObjectId[];
+export interface INotification extends Document {
+  title: string;
+  message: string;
+  target: 'all' | 'specific';
+  studentId?: string;
 }
 
-const NotificationSchema: Schema<Notification> = new Schema({
-    title: {
-        type: String,
-        required: true,
-        maxlength: 100,
-    },
-    message: {
-        type: String,
-        required: true,
-        maxlength: 1000,
-    },
-    target: {
-        type: String,
-        enum: ['all', 'specific'],
-        required: true
-    },
-    priority: {
-        type: String,
-        enum: ['normal', 'high'],
-        required: true
-    },
-    readBy: [{
-        type: Types.ObjectId,
-        ref: 'Student'
-    }],
+const NotificationSchema = new Schema<INotification>({
+  title: {
+    type: String,
+    required: true,
+    maxlength: 100,
+  },
+  message: {
+    type: String,
+    required: true,
+    maxlength: 1000,
+  },
+  target: {
+    type: String,
+    enum: ['all', 'specific'],
+    required: true
+  },
+  studentId: {
+    type: String,
+    required: false
+  }
 }, { timestamps: true });
 
-export const NotificationModel = (mongoose.models.Notification) || model<Notification>('Notification', NotificationSchema);
+export const NotificationModel = mongoose.models.Notification || model<INotification>('Notification', NotificationSchema);
