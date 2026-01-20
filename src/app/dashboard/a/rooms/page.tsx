@@ -73,9 +73,9 @@ export default function RoomManagement() {
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Rooms</h1>
           <p className="text-sm text-muted-foreground">Manage hostel rooms and occupancy.</p>
         </div>
-        <Button className="w-full sm:w-auto gap-2">
+        {/* <Button className="w-full sm:w-auto gap-2">
           <Plus className="h-4 w-4" /> Add Room
-        </Button>
+        </Button> */}
       </div>
 
       <ScrollArea className="h-[68vh] w-full">
