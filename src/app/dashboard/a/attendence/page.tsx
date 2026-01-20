@@ -11,6 +11,7 @@ import {
   X,
   ChevronDownIcon,
   Loader2,
+  Dot,
 } from "lucide-react";
 import {
   Popover,
@@ -26,7 +27,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import axios from "axios";
 import { toast } from "sonner";
 
-type Student = {
+export type Student = {
   _id: string;
   user: {
     fullName: string;
@@ -34,13 +35,16 @@ type Student = {
   room: {
     number: string;
   };
-  present: boolean;
+  present: boolean | null; // added later just for that icon
+  date: string
 };
 
 export default function AttendanceManager() {
   // Also make the functionality to store in the localstorage
   const [students, setStudents] = React.useState<Student[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [attendenceStatus, setAttendanceStatus] = useState<boolean>(true)
 
   // For shadcn calendar
   const [open, setOpen] = React.useState(false);
@@ -48,18 +52,42 @@ export default function AttendanceManager() {
 
   // const studentAttendence = new Map() // will use later for localstorage.
 
+  const getFormattedDate = (input: string | Date = new Date()): string => {
+  const date = new Date(input);
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};
   useEffect(() => {
     async function fetchStudents() {
       setIsLoading(true);
       try {
-        const response = await axios.post("/api/a/data/attendence");
-
+        const response = await axios.get(`/api/a/data/attendence?date=${getFormattedDate(date)}`);
         console.log("Fetched students:", response.data);
         if (!response.data.success) {
           toast.error(response.data.message);
         } else {
+          const fetchedData = response.data.data || [];
+          if (fetchedData[0].attendance === null) {
+            setAttendanceStatus(false)
+          }
+          else {
+            setAttendanceStatus(true)
+          }
+          
+          const studentsWithDefault = fetchedData.map((student: any) => ({
+            ...student,
+            present: student.attendance,
+            date: getFormattedDate()
+          }));
+
+          console.log("SETDEF: ", studentsWithDefault)
+          
+          setStudents(studentsWithDefault);
           toast.success("Students fetched successfully");
-          setStudents(response.data.data || []);
         }
       } catch (error) {
         toast.error("Failed to fetch students");
@@ -69,24 +97,36 @@ export default function AttendanceManager() {
     }
 
     fetchStudents();
-  }, []);
+  }, [date]);
 
   useEffect(() => {
-    console.log("Selected date:", date);
+    console.log("Selected date:", getFormattedDate(date));
   }, [date]);
+
+  const handleSubmit = async (data: Student[]) => {
+    setIsSubmitting(true)
+    try {
+      const response = await axios.post('/api/a/data/attendence', data)
+
+      if (!response.data.success) {
+        toast.error(response.data.message);
+      }
+      else {
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      toast.error("Unexpecter Error Occured")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
     <div className="flex flex-col h-[90vh] max-w-5xl mx-auto p-4 md:p-6 overflow-hidden">
       <div className="flex-none space-y-4 mb-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-card border border-border p-3 rounded-xl shadow-sm">
           <div className="flex items-center gap-2 bg-secondary/50 p-1 rounded-lg border border-border w-full sm:w-auto justify-between sm:justify-start">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 hover:bg-background"
-            >
-              {/* <ChevronLeft className="h-4 w-4" /> */}
-            </Button>
+          <Dot className={`${attendenceStatus ? "text-green-500": "text-amber-400"}`} size={40} />
             <div className="flex items-center gap-2 px-3 font-medium text-sm">
               {/* <Calendar className="h-4 w-4 text-muted-foreground" /> */}
               <Popover open={open} onOpenChange={setOpen}>
@@ -94,13 +134,14 @@ export default function AttendanceManager() {
                   <Button
                     variant="outline"
                     id="date"
-                    className="w-28 justify-between font-normal"
+                    className="w-38 justify-between font-normal"
                   >
+                    <Calendar />
                     {date ? (
                       date.toLocaleDateString()
                     ) : (
                       <div className="flex justify-center w-full">
-                        <Calendar />
+                        {getFormattedDate()}
                       </div>
                     )}
                   </Button>
@@ -139,9 +180,9 @@ export default function AttendanceManager() {
               <CheckCircle2 className="h-4 w-4" />
               Mark All
             </Button>
-            <Button size="sm" className="flex-1 sm:flex-none gap-2 h-9">
+            <Button disabled={isSubmitting || attendenceStatus} size="sm" onClick={() => handleSubmit(students)} className="flex-1 sm:flex-none gap-2 h-9">
               <Save className="h-4 w-4" />
-              Save Attendance
+              {isSubmitting && <Loader2 className="animate-spin"/>}Save Attendance
             </Button>
           </div>
         </div>
@@ -202,14 +243,14 @@ export default function AttendanceManager() {
                             setStudents(
                               students.map((s) =>
                                 s._id === student._id
-                                  ? { ...s, present: true }
+                                  ? { ...s, present: true, date: getFormattedDate() }
                                   : s,
                               ),
                             );
                           }}
                           variant="outline"
                           size="sm"
-                          className={`h-9 ${student.present === true && "text-emerald-500"} hover:border-emerald-500/50`}
+                          className={`h-9 ${student.present === true && "text-emerald-500"} hover:text-green-400 hover:border-emerald-500/50`}
                         >
                           <Check className="h-4 w-4 mr-1 sm:mr-2" />
                           <span className="hidden sm:inline">Present</span>
@@ -219,14 +260,14 @@ export default function AttendanceManager() {
                             setStudents(
                               students.map((s) =>
                                 s._id === student._id
-                                  ? { ...s, present: false }
+                                  ? { ...s, present: false, date: getFormattedDate()}
                                   : s,
                               ),
                             );
                           }}
                           variant="outline"
                           size="sm"
-                          className={`h-9  hover:border-destructive/50 ${student.present === false && "text-destructive"}`}
+                          className={`h-9 hover:text-red-400  hover:border-destructive/50 ${student.present === false && "text-destructive"}`}
                         >
                           <X className="h-4 w-4 mr-1 sm:mr-2" />
                           <span className="hidden sm:inline">Absent</span>
