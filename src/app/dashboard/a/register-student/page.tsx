@@ -1,11 +1,11 @@
 "use client";
 
-import React, { use, useEffect } from "react";
+import React, { use, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
-import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon, Loader2 } from "lucide-react";
 
 import { StudentSignupSchema } from "@/schemas/StudentSignupSchema";
 import { Button } from "@/components/ui/button";
@@ -51,10 +51,11 @@ export default function Page() {
   const [rooms, setRooms] = React.useState<{ number: number; _id: string }[]>(
     [],
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof StudentSignupSchema>>({
     resolver: zodResolver(StudentSignupSchema),
-    mode: "onBlur",
+    mode: "onTouched",
     defaultValues: {
       studentDetail: {
         studentName: "",
@@ -137,7 +138,8 @@ export default function Page() {
   };
 
   const handleSubmit = async (data: z.infer<typeof StudentSignupSchema>) => {
-    console.log("Submitted data:", data);
+    // console.log("Submitted data:", data);
+    setIsSubmitting(true)
     try {
       const res = await axios.post("/api/auth/student-signup", data);
       if (!res.data.success) {
@@ -151,6 +153,8 @@ export default function Page() {
     }catch (e) {
       toast.error("Failed to register student.");
       return;
+    }finally {
+      setIsSubmitting(false)
     }
   };
   return (
@@ -319,7 +323,7 @@ export default function Page() {
               </Button>
             ) : (
               <Button key={'submit-button'} type="submit">
-                Submit
+                {isSubmitting ? <><Loader2 className="animate-spin" /><span>Submit</span></>: "Submit"}
               </Button>
             )}
           </div>

@@ -2,20 +2,28 @@
 
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon } from "lucide-react";
+import { ChevronLeftIcon, Loader2 } from "lucide-react";
 import type React from "react";
 import { FloatingPaths } from "@/components/floating-paths";
 import Link from "next/link";
 import { Input } from "./ui/input";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { date, z } from "zod";
 import { LoginSchema } from "@/schemas/LoginSchema";
 import { Field, FieldError, FieldGroup, FieldLabel } from "./ui/field";
 import { useState } from "react";
 import Loader from "@/helper/Loader";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+export interface UserDetails {
+  email: string;
+  fullName: string;
+  isAdmin: boolean;
+  _id: string;
+}
 
 export function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -28,23 +36,50 @@ export function AuthPage() {
     },
   });
 
-
-  async function onSubmit(data: z.infer<typeof LoginSchema>) {
-    setIsLoading(true)
+  async function onSubmit(formData: z.infer<typeof LoginSchema>) {
+    setIsLoading(true);
 
     try {
-      const response = await axios.post("/api/auth/login", data);
+      const response = await axios.post("/api/auth/login", formData);
 
-      if (!response) {
-        console.log("Here is some error in response ")
+      if (response.data.success) {
+        const userData: UserDetails = response.data.data
+
+        console.log("Broom: ", userData)
+        if (!userData) {
+          throw new Error("User data missing from server response");
+        }
+        console.log("User Data Received:", userData);
+
+        localStorage.setItem("_id", userData._id);
+        localStorage.setItem(
+          "data",
+          JSON.stringify({
+            fullName: userData.fullName,
+            email: userData.email,
+            isAdmin: userData.isAdmin
+          }),
+        );
+
+        toast.success("Logged in successfully");
+        if (userData.isAdmin) {
+          return router.push("/dashboard/a");
+        } else {
+          return router.push("/dashboard/s");
+        }
+      } else {
+        toast.error(response.data.message || "Invalid credentials");
       }
+    } catch (error: any) {
+      console.error("Login Error:", error);
 
-      console.log("loggged in")
-      router.push("/dashboard/a");
-    } catch (error) {
-      console.error("Error occured: ", error)
+      const errorMessage =
+        error.response?.data?.message ||
+        "Something went wrong. Please try again.";
+      toast.error(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
-    
   }
 
   return (
@@ -150,8 +185,8 @@ export function AuthPage() {
               />
             </FieldGroup>
           </form>
-          <Button type="submit" form="login-form">
-            <Loader isLoading={isLoading} className="animate-spin" text="Submit"/>
+          <Button disabled={isLoading} type="submit" form="login-form">
+            {isLoading && <Loader2 className="animate-spin" />}Submit
           </Button>
           <p className="mt-8 text-muted-foreground text-sm">
             By clicking continue, you agree to our{" "}

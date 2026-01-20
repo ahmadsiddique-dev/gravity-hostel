@@ -18,19 +18,20 @@ import axios from "axios";
 interface Student {
   _id: string;
   name: string;
-  roomNumber: string; 
-  status: boolean;    
+  roomNumber: string;
+  status: boolean;
 }
 
 export default function StudentTable() {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await axios.get("/api/a/data/students");
-        
+
         if (response.data && response.data.success) {
           setStudents(response.data.students);
         }
@@ -43,6 +44,19 @@ export default function StudentTable() {
     fetchData();
   }, []);
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
+
+  const filteredStudents = students.filter((student) => {
+    const term = search.toLowerCase();
+    const nameMatch = student.name.toLowerCase().includes(term);
+    const roomMatch = student.roomNumber
+      ? student.roomNumber.toLowerCase().includes(term)
+      : false;
+    return nameMatch || roomMatch;
+  });
+
   return (
     <div className="w-full p-2 sm:p-8">
       <div className="max-w-6xl mx-auto space-y-6">
@@ -51,7 +65,9 @@ export default function StudentTable() {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
           <Input
-            placeholder="Search by name, email, CNIC, phone, or room..."
+            onChange={handleSearch}
+            value={search}
+            placeholder="Search by name or room..."
             className="pl-10"
           />
         </div>
@@ -68,33 +84,35 @@ export default function StudentTable() {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                   <TableRow>
-                     <TableCell colSpan={4} className="text-center py-10">
-                       Loading...
-                     </TableCell>
-                   </TableRow>
-                ) : (
-                  students.map((student) => (
-                    <TableRow key={student._id}> 
+                  <TableRow>
+                    <TableCell colSpan={4} className="text-center py-10">
+                      Loading...
+                    </TableCell>
+                  </TableRow>
+                ) : filteredStudents.length > 0 ? (
+                  filteredStudents.map((student) => (
+                    <TableRow key={student._id}>
                       <TableCell className="font-semibold py-4">
                         {student.name}
                       </TableCell>
-                      
+
                       <TableCell className="text-center">
                         {student.roomNumber || "Unassigned"}
                       </TableCell>
-                      
+
                       <TableCell className="text-center">
                         <Badge
                           variant={student.status ? "default" : "secondary"}
                           className={`border-none px-3 py-1 ${
-                            student.status ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700"
+                            student.status
+                              ? "bg-green-100 text-green-700"
+                              : "bg-gray-100 text-gray-700"
                           }`}
                         >
                           {student.status ? "Active" : "Inactive"}
                         </Badge>
                       </TableCell>
-                      
+
                       <TableCell className="text-right">
                         <Button variant="ghost" size="sm">
                           <Eye className="mr-2 h-4 w-4" />
@@ -103,6 +121,12 @@ export default function StudentTable() {
                       </TableCell>
                     </TableRow>
                   ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={4} className="text-center py-10">
+                      No students found.
+                    </TableCell>
+                  </TableRow>
                 )}
               </TableBody>
             </Table>

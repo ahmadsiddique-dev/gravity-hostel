@@ -81,7 +81,7 @@ const data = {
       url: "/dashboard/s/askme",
       icon: IconMessageChatbot,
     }
-  ],
+  ], 
   navMainAdmin : [
   {
     title: "Dashboard",
@@ -202,8 +202,24 @@ const data = {
   //   },
   // ],
 }
-
+ 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const whichToShow = localStorage.getItem("data") // why this says localstorage is
+ 
+  let nav = []
+  const desicion = JSON.parse(whichToShow!)
+
+  if (desicion.isAdmin) {
+    nav = data.navMainAdmin
+  }
+  else {
+    nav = data.navMainStudent
+  }
+  // function show() {
+  //   console.log("DESiCION", desicion);
+  //   console.log("result: ", desicion.isAdmin)
+  // }
+
   return (
     <ClientOnly>
     <Sidebar collapsible="offcanvas" {...props}>
@@ -223,7 +239,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMainAdmin} />
+        <NavMain items={nav} />
         {/* <NavDocuments items={data.documents} /> */}
         {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
