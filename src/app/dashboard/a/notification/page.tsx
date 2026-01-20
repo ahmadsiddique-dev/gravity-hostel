@@ -29,9 +29,16 @@ export interface Notification {
   studentId?: string;
 }
 
+interface ISudentDate{
+  _id: string;
+  fullName: string;
+  roomNumber: string
+}
 export default function NotificationComposer() {
   const [target, setTarget] = useState<"all" | "specific">("all");
   const [isLoading, setIsLoading] = useState(false);
+  const [incommingStudents, setIncommingStudents] = useState<ISudentDate[] | []>([]);
+
   
   const [notification, setNotification] = useState<Notification>({
     title: "",
@@ -77,6 +84,22 @@ export default function NotificationComposer() {
     }
   };
 
+  const handleSpecific = async () => {
+    try {
+      const response = await axios.get('/api/a/data/get-student')
+      if (!response.data.success) {
+        toast.error(response.data.message)
+      }
+      else {
+        // toast.success(response.data.message);
+        setIncommingStudents(response.data.data);
+        // console.log("Data: ", response.data.data);
+      }
+    } catch (error) {
+      toast.error("Something went wrong")
+    }
+  }
+
   return (
     <div className="p-4 md:px-8 max-w-4xl mx-auto space-y-3">
       <Card className="bg-card border-border">
@@ -98,7 +121,7 @@ export default function NotificationComposer() {
               </button>
 
               <button
-                onClick={() => setTarget("specific")}
+                onClick={() => {setTarget("specific");handleSpecific()}}
                 className={`flex flex-col items-center justify-center p-6 rounded-xl border-2 transition-all space-y-2 ${
                   target === "specific"
                     ? "border-primary bg-primary/5 text-primary"
@@ -108,7 +131,7 @@ export default function NotificationComposer() {
                 <User className="h-6 w-6" />
                 <span className="font-bold">Specific Student</span>
               </button>
-            </div>
+            </div>  
           </div>
 
           {target === "specific" && (
@@ -124,9 +147,11 @@ export default function NotificationComposer() {
                   <SelectValue placeholder="Select a student" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1">Ali Hassan (Room 304)</SelectItem>
-                  <SelectItem value="2">Ahmed Raza (Room 209)</SelectItem>
-                  <SelectItem value="3">Bilal Khan (Room 309)</SelectItem>
+                  { incommingStudents.map((student) => (
+                    <SelectItem key={`${student._id}`} value={`${student._id}`}>{`${student.fullName} (Room ${student.roomNumber})`}</SelectItem>
+                  ))}
+                  {/*<SelectItem value="2">Ahmed Raza (Room 209)</SelectItem>
+                  <SelectItem value="3">Bilal Khan (Room 309)</SelectItem> */}
                 </SelectContent>
               </Select>
             </div>
