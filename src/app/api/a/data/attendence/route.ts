@@ -7,6 +7,7 @@ import "@/models/Room.model";
 import { Student } from "@/app/dashboard/a/attendence/page";
 import { isValidObjectId } from "mongoose";
 import { NextRequest } from "next/server";
+import { success } from "zod";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -71,7 +72,7 @@ export async function POST(request: Request) {
     console.log("Data: ", body);
 
     const dataToInsert = body.map((record: any) => ({
-      student: record.student,
+      student: record._id,
       date: record.date,
       room: record.room.number,
       name: record.user.fullName,
