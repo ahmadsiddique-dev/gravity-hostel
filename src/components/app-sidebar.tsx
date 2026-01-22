@@ -81,7 +81,7 @@ const data = {
       url: "/dashboard/s/askme",
       icon: IconMessageChatbot,
     }
-  ], 
+  ],
   navMainAdmin : [
   {
     title: "Dashboard",
@@ -171,6 +171,7 @@ const data = {
   //   {
   //     title: "Settings",
   //     url: "#",
+  //     items: [],
   //     icon: IconSettings,
   //   },
   //   {
@@ -202,52 +203,61 @@ const data = {
   //   },
   // ],
 }
- 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const whichToShow = localStorage.getItem("data") // why this says localstorage is
- 
-  let nav = []
-  const desicion = JSON.parse(whichToShow!)
 
-  if (desicion.isAdmin) {
-    nav = data.navMainAdmin
-  }
-  else {
-    nav = data.navMainStudent
-  }
-  // function show() {
-  //   console.log("DESiCION", desicion);
-  //   console.log("result: ", desicion.isAdmin)
-  // }
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  // 1. Initialize with empty array to ensure server and client match initially
+  const [nav, setNav] = React.useState<any>([])
+
+  React.useEffect(() => {
+    // 2. This runs ONLY in the browser, fixing the hydration error
+    const whichToShow = localStorage.getItem("data")
+
+    if (whichToShow) {
+      try {
+        const decision = JSON.parse(whichToShow)
+        // 3. Update state based on parsed data
+        if (decision?.isAdmin) {
+          setNav(data.navMainAdmin)
+        } else {
+          setNav(data.navMainStudent)
+        }
+      } catch (error) {
+        console.error("Error parsing localStorage 'data':", error)
+        // Optional: fallback to student if JSON is corrupt
+        setNav(data.navMainStudent) 
+      }
+    }
+  }, [])
 
   return (
     <ClientOnly>
-    <Sidebar collapsible="offcanvas" {...props}>
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:p-1.5!"
-            >
-              <span>
-                <IconInnerShadowTop className="size-5!" />
-                <span className="text-base font-semibold">Gravity</span>
-              </span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={nav} />
-        {/* <NavDocuments items={data.documents} /> */}
-        {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
-      </SidebarContent>
-      <SidebarFooter>
-        {/* <NavUser user={data.user} /> */}
-        <Button className="bg-transparent hover:bg-white/5 text-red-500"> {/* <Spinner />*/} Logout</Button>
-      </SidebarFooter>
-    </Sidebar>
+      <Sidebar collapsible="offcanvas" {...props}>
+        <SidebarHeader>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                className="data-[slot=sidebar-menu-button]:p-1.5!"
+              >
+                <span>
+                  <IconInnerShadowTop className="size-5!" />
+                  <span className="text-base font-semibold">Gravity</span>
+                </span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarHeader>
+        <SidebarContent>
+          {/* nav will be empty on first render, then populate. This is safe. */}
+          <NavMain items={nav} />
+          {/* <NavDocuments items={data.documents} /> */}
+          {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
+        </SidebarContent>
+        <SidebarFooter>
+          {/* <NavUser user={data.user} /> */}
+          <Button className="bg-transparent hover:bg-white/5 text-red-500"> {/* <Spinner />*/} Logout</Button>
+        </SidebarFooter>
+      </Sidebar>
     </ClientOnly>
   )
 }

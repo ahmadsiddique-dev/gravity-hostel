@@ -70,8 +70,8 @@ export async function POST(request: Request) {
     const body: Student[] = await request.json();
     console.log("Data: ", body);
 
-    const dataToInsert = body.map((record) => ({
-      student: isValidObjectId(record._id) && record._id,
+    const dataToInsert = body.map((record: any) => ({
+      student: record.student,
       date: record.date,
       room: record.room.number,
       name: record.user.fullName,
@@ -80,7 +80,8 @@ export async function POST(request: Request) {
 
     console.log("Data to Insert: ", dataToInsert);
     const response = await AttendenceModel.insertMany(dataToInsert);
-
+    
+    console.log("3.Response: ", response)
     if (!response)
       return Response.json(
         { success: false, message: "Unable to Insert Documents" },

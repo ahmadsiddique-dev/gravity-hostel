@@ -1,7 +1,7 @@
 import mongoose, { Schema, model, Document, Types } from "mongoose";
 
 export interface Attendence extends Document {
-  student: Types.ObjectId;
+  student: string;
   room: string;
   date: string;
   name: string;
@@ -11,8 +11,7 @@ export interface Attendence extends Document {
 const AttendenceSchema: Schema<Attendence> = new Schema(
   {
     student: {
-      type: Types.ObjectId,
-      ref: "Student",
+      type: String,
       required: true,
     },
     date: {
@@ -29,7 +28,6 @@ const AttendenceSchema: Schema<Attendence> = new Schema(
     },
     status: {
       type: Boolean,
-      default: false,
       required: true,
     },
   },
