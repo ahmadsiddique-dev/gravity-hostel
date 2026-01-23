@@ -81,7 +81,7 @@ export default function AttendanceManager() {
           const studentsWithDefault = fetchedData.map((student: any) => ({
             ...student,
             present: student.attendance,
-            date: getFormattedDate()
+            date: getFormattedDate(date)
           }));
 
           console.log("SETDEF: ", studentsWithDefault)
@@ -107,12 +107,12 @@ export default function AttendanceManager() {
     setIsSubmitting(true)
     try {
       const response = await axios.post('/api/a/data/attendence', data)
-
       if (!response.data.success) {
         toast.error(response.data.message);
       }
       else {
         toast.success(response.data.message);
+        setAttendanceStatus(true);
       }
     } catch (error) {
       toast.error("Unexpecter Error Occured")
@@ -243,7 +243,7 @@ export default function AttendanceManager() {
                             setStudents(
                               students.map((s) =>
                                 s._id === student._id
-                                  ? { ...s, present: true, date: getFormattedDate() }
+                                  ? { ...s, present: true, date: getFormattedDate(date) }
                                   : s,
                               ),
                             );
@@ -260,7 +260,7 @@ export default function AttendanceManager() {
                             setStudents(
                               students.map((s) =>
                                 s._id === student._id
-                                  ? { ...s, present: false, date: getFormattedDate()}
+                                  ? { ...s, present: false, date: getFormattedDate(date)}
                                   : s,
                               ),
                             );

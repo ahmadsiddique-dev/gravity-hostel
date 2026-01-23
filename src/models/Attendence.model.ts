@@ -30,7 +30,7 @@ const AttendenceSchema: Schema<Attendence> = new Schema(
       type: Boolean,
       required: true,
     },
-  },
+  }, { timestamps: true}
 );
 
 export const AttendenceModel =
