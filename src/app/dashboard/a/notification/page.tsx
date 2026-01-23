@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Users, User, Send, Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -100,6 +100,10 @@ export default function NotificationComposer() {
     }
   }
 
+  useEffect(() => {
+    handleSpecific();
+  }, [])
+
   return (
     <div className="p-4 md:px-8 max-w-4xl mx-auto space-y-3">
       <Card className="bg-card border-border">
@@ -121,7 +125,7 @@ export default function NotificationComposer() {
               </button>
 
               <button
-                onClick={() => {setTarget("specific");handleSpecific()}}
+                onClick={() => {setTarget("specific");}}
                 className={`flex flex-col items-center justify-center p-6 rounded-xl border-2 transition-all space-y-2 ${
                   target === "specific"
                     ? "border-primary bg-primary/5 text-primary"

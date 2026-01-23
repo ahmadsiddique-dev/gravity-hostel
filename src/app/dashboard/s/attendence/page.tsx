@@ -21,6 +21,18 @@ interface IAttendace {
   updatedAt: string;
 }
 
+  export const formatUtcTime = (isoString: string): string => {
+    if (!isoString) return "00:00:00";
+
+    const date = new Date(isoString);
+
+    const hours = date.getUTCHours().toString().padStart(2, "0");
+    const minutes = date.getUTCMinutes().toString().padStart(2, "0");
+    const seconds = date.getUTCSeconds().toString().padStart(2, "0");
+
+    return `${hours}:${minutes}:${seconds}`;
+  };
+
 export default function AttendanceHistory() {
   const [data, setData] = useState<IAttendace[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,17 +60,7 @@ export default function AttendanceHistory() {
     }
   };
 
-  const formatUtcTime = (isoString: string): string => {
-    if (!isoString) return "00:00:00";
 
-    const date = new Date(isoString);
-
-    const hours = date.getUTCHours().toString().padStart(2, "0");
-    const minutes = date.getUTCMinutes().toString().padStart(2, "0");
-    const seconds = date.getUTCSeconds().toString().padStart(2, "0");
-
-    return `${hours}:${minutes}:${seconds}`;
-  };
 
   useEffect(() => {
     getAttendance();

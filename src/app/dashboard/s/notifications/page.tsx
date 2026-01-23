@@ -1,109 +1,49 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import { Bell, MoreHorizontal, CheckCheck, Calendar } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
+import { getId } from "@/hooks/get-id";
+import { toast } from "sonner";
+import { formatUtcTime } from "../attendence/page";
 
-const notifications = [
-  {
-    id: 1,
-    title: "Office Meeting",
-    message:
-      "We have to talk, please come to my office to discuss the upcoming schedule.",
-    time: "11/12/2025",
-    isNew: true,
-  },
-  {
-    id: 2,
-    title: "Evening Assembly",
-    message:
-      "You all need to be in the main hall this evening for the mandatory briefing.",
-    time: "11/12/2025",
-    isNew: true,
-  },
-  {
-    id: 3,
-    title: "Health Advisory",
-    message:
-      "Take care of your health. Ensure you are following the latest hygiene protocols.",
-    time: "11/12/2025",
-    isNew: false,
-  },
-  {
-    id: 4,
-    title: "Disciplinary Update",
-    message: "Please maintain decorum in the hostel premises at all times.",
-    time: "11/12/2025",
-    isNew: false,
-  },
-  {
-    id: 5,
-    title: "Office Meeting",
-    message:
-      "We have to talk, please come to my office to discuss the upcoming schedule.",
-    time: "11/12/2025",
-    isNew: true,
-  },
-  {
-    id: 6,
-    title: "Evening Assembly",
-    message:
-      "You all need to be in the main hall this evening for the mandatory briefing.",
-    time: "11/12/2025",
-    isNew: true,
-  },
-  {
-    id: 7,
-    title: "Health Advisory",
-    message:
-      "Take care of your health. Ensure you are following the latest hygiene protocols.",
-    time: "11/12/2025",
-    isNew: false,
-  },
-  {
-    id: 8,
-    title: "Disciplinary Update",
-    message: "Please maintain decorum in the hostel premises at all times.",
-    time: "11/12/2025",
-    isNew: false,
-  },
-  {
-    id: 9,
-    title: "Office Meeting",
-    message:
-      "We have to talk, please come to my office to discuss the upcoming schedule.",
-    time: "11/12/2025",
-    isNew: true,
-  },
-  {
-    id: 10,
-    title: "Evening Assembly",
-    message:
-      "You all need to be in the main hall this evening for the mandatory briefing.",
-    time: "11/12/2025",
-    isNew: true,
-  },
-  {
-    id: 11,
-    title: "Health Advisory",
-    message:
-      "Take care of your health. Ensure you are following the latest hygiene protocols.",
-    time: "11/12/2025",
-    isNew: false,
-  },
-  {
-    id: 12,
-    title: "Disciplinary Update",
-    message: "Please maintain decorum in the hostel premises at all times.",
-    time: "11/12/2025",
-    isNew: false,
-  },
-];
+interface NotificationItem {
+  _id: string;      
+  title: string;
+  message: string;
+  createdAt: string;     
+  isNew?: boolean;   
+}
 
 export default function NotificationPage() {
+  const [notificationList, setNotificationList] = useState<NotificationItem[]>([]);
+
+  const getNotification = async () => {
+    try {
+      const id = getId();
+      const response = await axios.post("/api/s/getnotification", {
+        _id: id,
+      });
+
+      if (!response.data.success) {
+        toast.error(response.data.message);
+      } else {
+        toast.success(response.data.message);
+        console.log("Notification Response: ", response.data.data);
+        setNotificationList(response.data.data);
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
+  };
+
+
+  useEffect(() => {
+    getNotification();
+  }, []);
   return (
     <div className="flex flex-col w-full bg-background p-4 md:p-8 overflow-hidden">
-      
-      {/* 1. FIXED HEADER SECTION */}
       <div className="flex-none mb-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-3">
@@ -119,38 +59,33 @@ export default function NotificationPage() {
               </p>
             </div>
           </div>
-          <Button
+          {/* <Button
             variant="outline"
             size="sm"
             className="gap-2 h-9 w-full sm:w-auto"
           >
             <CheckCheck className="h-4 w-4" />
             Mark all as read
-          </Button>
+          </Button> */}
         </div>
       </div>
-
-      {/* 2. SCROLLABLE NOTIFICATION FEED */}
-      {/* Fixed: 
-          - flex-1 allows this container to grow to fill remaining screen space.
-          - border and rounded corners are applied here so the scrollbar stays inside.
-      */}
       <div className="bg-card border border-border rounded-2xl shadow-sm overflow-hidden">
         <ScrollArea className="h-[70vh] w-full">
           <div className="divide-y divide-border">
-            {notifications.map((notif, index) => (
+            {notificationList.map((notif, index) => (
               <div
-                /* Note: Ensure unique keys if IDs repeat in your data */
-                key={`${notif.id}-${index}`}
+                key={`${notif._id}-${index}`}
                 className={`group flex items-start gap-4 p-5 transition-colors hover:bg-secondary/20 cursor-pointer ${
-                  notif.isNew ? "bg-primary/[0.02]" : ""
+                  notif.isNew ? "bg-primary/2" : ""
                 }`}
               >
                 <div className="flex-1 space-y-1">
                   <div className="flex items-center justify-between gap-4">
                     <h3
                       className={`text-sm font-semibold tracking-tight ${
-                        notif.isNew ? "text-foreground" : "text-muted-foreground"
+                        notif.isNew
+                          ? "text-foreground"
+                          : "text-muted-foreground"
                       }`}
                     >
                       {notif.title}
@@ -158,7 +93,7 @@ export default function NotificationPage() {
                     <div className="flex items-center gap-3 flex-none">
                       <span className="text-[10px] sm:text-xs text-muted-foreground flex items-center gap-1 font-medium whitespace-nowrap">
                         <Calendar className="h-3 w-3" />
-                        {notif.time}
+                        {formatUtcTime(notif.createdAt)}
                       </span>
                       <Button
                         variant="ghost"
@@ -176,7 +111,6 @@ export default function NotificationPage() {
               </div>
             ))}
           </div>
-          {/* Bottom padding so the last item isn't flush with the edge */}
           <div className="h-6" />
         </ScrollArea>
       </div>
