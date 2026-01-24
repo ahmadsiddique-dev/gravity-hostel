@@ -22,99 +22,108 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import axios from "axios";
 import { toast } from "sonner";
 import { getId } from "@/hooks/get-id";
+import { formatUtcTime } from "../../s/attendence/page";
 
-const initialComplaints = [
-  {
-    id: 1,
-    title: "hello dear",
-    student: "Ali Hassan",
-    date: "10/12/2025",
-    description: "just wanted to know about your health hope you are fine",
-    status: "RESOLVED",
-  },
-  {
-    id: 2,
-    title: "broom",
-    student: "Ali Hassan",
-    date: "10/12/2025",
-    description: "do not broom",
-    status: "REJECTED",
-  },
-  {
-    id: 3,
-    title: "Noisy roommate",
-    student: "Iftikhar Ahmed",
-    date: "02/12/2025",
-    description: "My roommate plays loud music late at night.",
-    status: "PENDING",
-  },
-  {
-    id: 1,
-    title: "hello dear",
-    student: "Ali Hassan",
-    date: "10/12/2025",
-    description: "just wanted to know about your health hope you are fine",
-    status: "RESOLVED",
-  },
-  {
-    id: 2,
-    title: "broom",
-    student: "Ali Hassan",
-    date: "10/12/2025",
-    description: "do not broom",
-    status: "REJECTED",
-  },
-  {
-    id: 3,
-    title: "Noisy roommate",
-    student: "Iftikhar Ahmed",
-    date: "02/12/2025",
-    description: "My roommate plays loud music late at night.",
-    status: "PENDING",
-  },
-];
+// const initialComplaints = [
+//   {
+//     id: 1,
+//     title: "hello dear",
+//     student: "Ali Hassan",
+//     date: "10/12/2025",
+//     description: "just wanted to know about your health hope you are fine",
+//     status: "RESOLVED",
+//   },
+//   {
+//     id: 2,
+//     title: "broom",
+//     student: "Ali Hassan",
+//     date: "10/12/2025",
+//     description: "do not broom",
+//     status: "REJECTED",
+//   },
+//   {
+//     id: 3,
+//     title: "Noisy roommate",
+//     student: "Iftikhar Ahmed",
+//     date: "02/12/2025",
+//     description: "My roommate plays loud music late at night.",
+//     status: "PENDING",
+//   },
+//   {
+//     id: 1,
+//     title: "hello dear",
+//     student: "Ali Hassan",
+//     date: "10/12/2025",
+//     description: "just wanted to know about your health hope you are fine",
+//     status: "RESOLVED",
+//   },
+//   {
+//     id: 2,
+//     title: "broom",
+//     student: "Ali Hassan",
+//     date: "10/12/2025",
+//     description: "do not broom",
+//     status: "REJECTED",
+//   },
+//   {
+//     id: 3,
+//     title: "Noisy roommate",
+//     student: "Iftikhar Ahmed",
+//     date: "02/12/2025",
+//     description: "My roommate plays loud music late at night.",
+//     status: "PENDING",
+//   },
+// ];
 
+export interface IRecord {
+  id: string;
+  title: string;
+  number: string;
+  date: string; 
+  description: string;
+  status: "PENDING" | "REJECTED" | "RESOLVED"; 
+}
 export default function ComplaintsManagement() {
   const [filter, setFilter] = useState("all");
-  // const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [complaintsData, setComplaintsData] = useState<IRecord[]>([]);
 
-  // const _id = getId();
+  const complaints = async () => {
+    try {
+      const response = await axios.get(`/api/a/complaint`);
 
-  // const complaints = async () => {
-  //   try {
-  //     const response = await axios.get(`/api/s/complaint?_id=${_id}`);
+      if (!response.data.success) {
+        toast.error(response.data.message);
+      }
+      else {
+        toast.error(response.data.message);
+        console.log("data:", response.data.data)
+        setComplaintsData(response.data.data)
+      }
+    } catch (error) {
+      toast.error("Internal server Error");
+    }
+  };
 
-  //     if (!response.data.success) {
-  //       toast.error(response.data.message);
-  //     }
-  //     else {
-  //       toast.error(response.data.message);
-  //       console.log("data:", response.data.data)
-  //     }
-  //   } catch (error) {
-  //     toast.error("Internal server Error");
-  //   }
-  // };
+  useEffect(() => {
+    complaints();
+  }, [])
 
-  // useEffect(() => {
-  //   complaints();
-  // }, [])
-
-  // const handleSubmit = async () => {
-  //   setIsSubmitting(true);
-  //   try {
-  //     const response = await axios.post("/api/s/complaint");
-  //     if (!response.data.success) {
-  //       toast.error(response.data.message);
-  //     } else {
-  //       toast.success(response.data.message);
-  //     }
-  //   } catch (error) {
-  //     toast.error("Unexpecter Error Occured");
-  //   } finally {
-  //     setIsSubmitting(false);
-  //   }
-  // };
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      const response = await axios.post("/api/s/complaint");
+      if (!response.data.success) {
+        toast.error(response.data.message);
+      } else {
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      toast.error("Unexpecter Error Occured");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="flex flex-col max-w-6xl mx-auto overflow-hidden">
@@ -125,7 +134,7 @@ export default function ComplaintsManagement() {
             Track and resolve student issues
           </p>
         </div>
-
+        
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <Filter className="h-4 w-4 text-muted-foreground hidden sm:block" />
           <Select defaultValue="all" onValueChange={setFilter}>
@@ -144,7 +153,7 @@ export default function ComplaintsManagement() {
 
       <div className="">
         <ScrollArea className="flex-1 flex flex-col  space-y-4 pb-8 gap-2.5 h-[78vh] pr-4">
-          {initialComplaints.map((complaint) => (
+          {complaintsData.map((complaint) => (
             <ComplaintCard key={complaint.id} complaint={complaint} />
           ))}
         </ScrollArea>
@@ -153,7 +162,7 @@ export default function ComplaintsManagement() {
   );
 }
 
-function ComplaintCard({ complaint }: { complaint: any }) {
+function ComplaintCard({ complaint }: { complaint: IRecord }) {
   const [currentStatus, setCurrentStatus] = useState(complaint.status);
 
   return (
@@ -168,10 +177,10 @@ function ComplaintCard({ complaint }: { complaint: any }) {
                 </h3>
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
                   <span className="flex items-center gap-1">
-                    <MessageSquare className="h-3 w-3" /> {complaint.student}
+                    <MessageSquare className="h-3 w-3" /> {complaint.description}
                   </span>
                   <span className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" /> {complaint.date}
+                    <Clock className="h-3 w-3" /> {formatUtcTime(complaint.date)}
                   </span>
                 </div>
               </div>

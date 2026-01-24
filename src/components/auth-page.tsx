@@ -3,7 +3,6 @@
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { ChevronLeftIcon, Loader2 } from "lucide-react";
-import type React from "react";
 import { FloatingPaths } from "@/components/floating-paths";
 import Link from "next/link";
 import { Input } from "./ui/input";
@@ -60,7 +59,7 @@ export function AuthPage() {
             isAdmin: userData.isAdmin
           }),
         );
-        
+
         if (userData.isAdmin) {
           return router.push("/dashboard/a");
         } else {
