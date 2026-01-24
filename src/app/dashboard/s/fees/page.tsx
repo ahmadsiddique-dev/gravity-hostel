@@ -34,17 +34,46 @@ export interface IFeeVoucher {
   createdAt: string;
   month: number;
   year: number;
-  status: string; // Added this
+  status: string; 
 }
 
 const months = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 
 export default function ResponsiveFinancialDashboard() {
   const [feeRecords, setFeeRecords] = useState<IFeeVoucher[]>([]);
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({ currentDue: 0, totalPaid: 0 });
+
+  useEffect(() => {
+    let calculatedDue = 0;
+    let calculatedPaid = 0;
+    feeRecords.forEach((record) => {
+      const status = record.status?.toLowerCase();
+
+      if (status !== "paid") {
+        calculatedDue += record.amount;
+      } else {
+        calculatedPaid += record.amount;
+      }
+    });
+    setStats({
+      currentDue: calculatedDue,
+      totalPaid: calculatedPaid,
+    });
+  }, [feeRecords]);
 
   const fetchRecords = async () => {
     try {
@@ -72,33 +101,23 @@ export default function ResponsiveFinancialDashboard() {
     fetchRecords();
   }, []);
 
-  const handleDownload = (id: string) => {
-     // Placeholder for download logic
-     toast.info(`Downloading voucher ${id}...`);
-     // window.open(`/api/s/download/${id}`, '_blank');
-  };
-
   return (
     <div className="w-full bg-background p-4 md:p-8 space-y-6">
-      {/* --- STATS SECTION --- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <StatCard
           title="CURRENT DUE"
-          amount="25,000"
-          subtitle="Due by Dec 10"
+          amount={stats.currentDue}
           icon={<Wallet className="h-4 w-4 text-blue-400" />}
         />
         <StatCard
           title="TOTAL PAID (2025)"
-          amount="275,000"
-          subtitle="11 Months paid"
+          amount={stats.totalPaid}
           icon={<CheckCircle2 className="h-4 w-4 text-emerald-400" />}
           trend={<ArrowUpRight className="h-3 w-3 inline ml-1 opacity-50" />}
         />
         <StatCard
           title="LATE CHARGES"
           amount="0"
-          subtitle="Perfect record"
           icon={<Clock className="h-4 w-4 text-amber-400" />}
           className="sm:col-span-2 lg:col-span-1"
         />
@@ -107,7 +126,7 @@ export default function ResponsiveFinancialDashboard() {
       {/* --- TABLE SECTION --- */}
       <Card className="bg-card border-border rounded-2xl overflow-hidden shadow-sm">
         <ScrollArea className="w-full">
-          <div className="min-w-[600px]"> 
+          <div className="min-w-150">
             <ScrollArea className="h-[45vh] w-full">
               {loading ? (
                 <div className="flex h-full items-center justify-center p-10">
@@ -148,10 +167,9 @@ export default function ResponsiveFinancialDashboard() {
                           </div>
                         </TableCell>
 
-                        {/* 2. Status Pill (Fixed Logic) */}
                         <TableCell>
                           <div className="flex justify-center">
-                            {fee.status?.toLowerCase() === "paid" ? (
+                            {fee.status == "paid" ? (
                               <div className="flex items-center justify-center gap-2 px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-500 font-bold text-[10px] border border-emerald-500/20">
                                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                                 PAID

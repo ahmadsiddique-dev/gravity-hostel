@@ -19,7 +19,7 @@ export async function POST(request:Request) {
 
         const stringId = studentId?._id.toString()
         console.log("StringedID : ", stringId)
-        const response = await FeeModel.find({ student: stringId}, { createdAt: 1, dueDate: 1, roomRent: 1, messFee: 1, amount: 1, month: 1, year: 1})
+        const response = await FeeModel.find({ student: stringId}, { createdAt: 1, dueDate: 1, roomRent: 1, messFee: 1, amount: 1, month: 1, year: 1, status: 1})
 
         if (!response.length) {
             return Response.json({
