@@ -100,12 +100,9 @@ const AssignVoucher = () => {
     };
 
     try {
-      // CHANGED FROM GET TO POST
       const response = await axios.post("/api/a/one-voucher", payload);
 
       if (response.data.success) {
-        toast.success("Voucher generated!");
-        // Optional: Remove this student from the list so you don't assign them again
         setAllStudentData((prev) =>
           prev.filter((s) => s._id !== selectedStudentId),
         );
@@ -147,9 +144,6 @@ const AssignVoucher = () => {
       const response = await axios.post("/api/a/bulk-vouchers", bulkPayload);
 
       if (response.data.success) {
-        toast.success(response.data.message); // e.g. "Successfully generated 50 vouchers"
-
-        // Clear the list since everyone is assigned now
         setAllStudentData([]);
       }
     } catch (error: any) {

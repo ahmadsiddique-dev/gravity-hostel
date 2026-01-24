@@ -146,7 +146,6 @@ export default function Page() {
         toast.error(res.data.message || "Failed to register student.");
         return;
       }
-      toast.success("Student registered successfully.");
       form.reset();
       localStorage.removeItem("student-registration-data");
       setStepper({ currentStep: 1, progressValue: 33 });

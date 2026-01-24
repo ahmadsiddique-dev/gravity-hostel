@@ -60,8 +60,7 @@ export function AuthPage() {
             isAdmin: userData.isAdmin
           }),
         );
-
-        toast.success("Logged in successfully");
+        
         if (userData.isAdmin) {
           return router.push("/dashboard/a");
         } else {

@@ -46,7 +46,6 @@ export default function AttendanceHistory() {
       if (!response.data.success) {
         toast.error(response.data.message);
       } else {
-        toast.success(response.data.message);
         setData(response.data.data);
       }
     } catch (error) {

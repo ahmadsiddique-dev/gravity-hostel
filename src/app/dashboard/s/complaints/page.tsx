@@ -100,7 +100,6 @@ export default function MyComplaintsPage() {
       if (!response.data.success) {
         toast.error(response.data.message);
       } else {
-        toast.success(response.data.message);
         console.log("Complaint Data:", response.data.data);
       }
     } catch (error) {

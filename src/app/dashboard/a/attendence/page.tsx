@@ -88,7 +88,6 @@ export default function AttendanceManager() {
           console.log("SETDEF: ", studentsWithDefault);
 
           setStudents(studentsWithDefault);
-          toast.success("Students fetched successfully");
         }
       } catch (error) {
         toast.error("Failed to fetch students");
@@ -111,7 +110,6 @@ export default function AttendanceManager() {
       if (!response.data.success) {
         toast.error(response.data.message);
       } else {
-        toast.success(response.data.message);
         setAttendanceStatus(true);
       }
     } catch (error) {

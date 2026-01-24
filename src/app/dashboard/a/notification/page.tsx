@@ -72,7 +72,6 @@ export default function NotificationComposer() {
       if (!response.data.success) {
         toast.error(response.data.message);
       } else {
-        toast.success(response.data.message);
         setNotification({ title: "", message: "", studentId: "" });
         setTarget("all"); 
       }
@@ -91,7 +90,6 @@ export default function NotificationComposer() {
         toast.error(response.data.message)
       }
       else {
-        // toast.success(response.data.message);
         setIncommingStudents(response.data.data);
         // console.log("Data: ", response.data.data);
       }
