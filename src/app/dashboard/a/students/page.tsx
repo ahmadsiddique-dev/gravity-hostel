@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 
 interface Student {
@@ -26,6 +27,7 @@ export default function StudentTable() {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchData() {
@@ -114,7 +116,13 @@ export default function StudentTable() {
                       </TableCell>
 
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="sm">
+                        <Button
+                          onClick={() =>
+                            router.push(`/dashboard/a/profile/${student._id}`)
+                          }
+                          variant="ghost"
+                          size="sm"
+                        >
                           <Eye className="mr-2 h-4 w-4" />
                           View
                         </Button>
