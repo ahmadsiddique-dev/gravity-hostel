@@ -1,6 +1,6 @@
 import dbConnect from "@/connection/dbconnect";
 import { StudentModel } from "@/models/StudentSignup.model";
-import { FeeModel } from "@/models/Fee.model";// Make sure this path is correct
+import { FeeModel } from "@/models/Fee.model";
 
 export const dynamic = "force-dynamic";
 
@@ -12,54 +12,59 @@ export async function GET(request: Request) {
     const month = searchParams.get("month");
     const year = searchParams.get("year");
 
-    if (!month || !year) { 
+    if (!month || !year) {
       return Response.json(
         { success: false, message: "Month and Year are required" },
-        { status: 400 },
+        { status: 400 }
       );
     }
-
     const existingVouchers = await FeeModel.find({
-      month: month,
-      year: year,
-    }).select("student"); 
+      month: month, 
+      year: year, 
+    }).select("student");
 
-    console.log("ExistingVouvhers: ", existingVouchers)
-    const assignedStudentIds = existingVouchers.map((v: any) => v.student);
-    console.log("AssignedIDS: ", assignedStudentIds);
+    console.log("Seeleterd: ", existingVouchers);
+
+    console.log(`Found ${existingVouchers.length} existing vouchers for ${month}/${year}`);
+
+    const assignedStudentIds = existingVouchers.map((v: any) => {
+      const s = v.student;
+      return (s?._id || s).toString(); 
+    });
+
+    console.log("Assigned IDs to Exclude:", assignedStudentIds);
 
     const unassignedStudents = await StudentModel.find(
       {
         _id: { $nin: assignedStudentIds }, 
-      }, 
-      { _id: 1, student: 1, room: 1, user: 1 },
+      },
+      { _id: 1, student: 1, room: 1, user: 1 }
     )
-      .populate("user", "fullName") 
+      .populate("user", "fullName")
       .populate("room", "type number");
 
     const dataToSend = unassignedStudents.map((e: any) => {
-        return {
-            _id: e._id,
-            name: e.user.fullName,
-            roomType: e.room.type,
-            room: e.room.number
-        }
-    })
+      return {
+        _id: e._id,
+        name: e.user?.fullName || "Unknown",
+        roomType: e.room?.type || "N/A",
+        room: e.room?.number || "N/A",
+      };
+    });
+
     return Response.json(
       {
         success: true,
         message: "Data fetched successfully",
-        data: dataToSend
+        data: dataToSend,
       },
-      { status: 200 },
+      { status: 200 }
     );
-
-
   } catch (error) {
     console.error("Assign Voucher API Error:", error);
     return Response.json(
       { success: false, message: "Server Error while fetching students" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

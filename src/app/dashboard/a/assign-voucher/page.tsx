@@ -62,12 +62,11 @@ const AssignVoucher = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [messFee, setMessFee] = useState<number>(5000);
   const [allStudentData, setAllStudentData] = useState<IAllStudentData[]>([])
-  const [unpaidStudent, getUnpaidStudent] = useState<IAllStudentData[]>([])// Global mess fee setting
+  const [unpaidStudent, setUnpaidStudent] = useState<IAllStudentData[]>([])
   
-  // Date Range State (From = Issue Date/Month, To = Due Date)
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: new Date(),
-    to: addDays(new Date(), 10), // Default due date 10 days later
+    to: addDays(new Date(), 10),
   });
 
   // Single Student State
@@ -85,32 +84,10 @@ const AssignVoucher = () => {
     }
   };
 
-  // --- SUBMIT: Single Voucher ---
-  const handleSingleSubmit = async () => {
+const handleSingleSubmit = async () => {
     if (!selectedStudentId || !date?.from || !date?.to) return;
     
     setIsLoading(true);
-
-//     student
-// "696f54271ce431b220feb142"
-// month
-// 12
-// year
-// 2025
-// amount
-// 25000
-// roomRent
-// 20000
-// messFee
-// 5000
-// status
-// "unpaid"
-// paidAmount
-// null
-// paidDate
-// null
-// dueDate
-// "22/10/2026"
     const payload = {
       student: selectedStudentId,
       month: date.from.getMonth() + 1, 
@@ -122,13 +99,26 @@ const AssignVoucher = () => {
       status: "unpaid"
     };
 
-    // console.log("SENDING SINGLE TO BACKEND:", payload);
-    const response = await axios.get('/api/a/one-voucher');
-    
-    // Simulate Network Request
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsLoading(false);
-    alert("Voucher assigned successfully!");
+    try {
+      // CHANGED FROM GET TO POST
+      const response = await axios.post('/api/a/one-voucher', payload);
+      
+      if(response.data.success){
+        toast.success("Voucher generated!");
+        // Optional: Remove this student from the list so you don't assign them again
+        setUnpaidStudent(prev => prev.filter(s => s._id !== selectedStudentId));
+        setSelectedStudentId(""); 
+      }
+    } catch (error: any) {
+       // Handle duplicate error specifically
+       if(error.response?.status === 409){
+          toast.error("Voucher already exists for this student.");
+       } else {
+          toast.error("Failed to generate voucher.");
+       }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // --- SUBMIT: Bulk (Assign All) ---
@@ -159,7 +149,7 @@ const AssignVoucher = () => {
     setIsLoading(false);
     alert(`Successfully generated vouchers for ${bulkPayload.length} students!`);
   };
-
+ 
   const getStudents = async () => {
     try {
         const response = await axios.get('/api/a/get-for-voucher')
@@ -184,9 +174,8 @@ const AssignVoucher = () => {
         if (!response.data.success) {
             toast.error("No Students found");
         }
-        else {   
-            // setAllStudentData(response.data.data);
-            console.log(response.data.data)
+        else {
+            setUnpaidStudent(response.data.data)
         }
     } catch (error) {
         toast.error("user not fetched")
@@ -254,7 +243,6 @@ const AssignVoucher = () => {
             </div>
           </div>
         </CardHeader>
-
         <CardContent>
           <Tabs defaultValue="single" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
