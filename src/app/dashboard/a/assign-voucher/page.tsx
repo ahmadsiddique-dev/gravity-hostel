@@ -61,7 +61,8 @@ const AssignVoucher = () => {
   // --- STATE ---
   const [isLoading, setIsLoading] = useState(false);
   const [messFee, setMessFee] = useState<number>(5000);
-  const [allStudentData, setAllStudentData] = useState<IAllStudentData[]>([])// Global mess fee setting
+  const [allStudentData, setAllStudentData] = useState<IAllStudentData[]>([])
+  const [unpaidStudent, getUnpaidStudent] = useState<IAllStudentData[]>([])// Global mess fee setting
   
   // Date Range State (From = Issue Date/Month, To = Due Date)
   const [date, setDate] = React.useState<DateRange | undefined>({
@@ -167,6 +168,24 @@ const AssignVoucher = () => {
         }
         else {   
             setAllStudentData(response.data.data);
+        }
+    } catch (error) {
+        toast.error("user not fetched")
+    }
+  }
+
+  const getUnpaidStudents = async () => {
+    const date = new Date();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    console.log("MONTH & Year", month, year);
+    try {
+        const response = await axios.get(`/api/a/unpaid-student?month=${month}&year=${year}`)
+        if (!response.data.success) {
+            toast.error("No Students found");
+        }
+        else {   
+            // setAllStudentData(response.data.data);
             console.log(response.data.data)
         }
     } catch (error) {
@@ -176,7 +195,9 @@ const AssignVoucher = () => {
 
   useEffect(() => {
     getStudents();
+    getUnpaidStudents();
   }, [])
+
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-background p-4">
@@ -222,7 +243,7 @@ const AssignVoucher = () => {
                     mode="range"
                     defaultMonth={date?.from}
                     selected={date}
-                    onSelect={setDate}
+                    onSelect={setDate} 
                     numberOfMonths={2}
                   />
                 </PopoverContent>
@@ -251,7 +272,7 @@ const AssignVoucher = () => {
                       <SelectValue placeholder="Search student..." />
                     </SelectTrigger>
                     <SelectContent>
-                      {allStudentData.map((s) => (
+                      {unpaidStudent.map((s) => (
                         <SelectItem key={s._id} value={s._id}>
                           {s.name} <span className="text-xs text-muted-foreground">({s.roomType})</span>
                         </SelectItem>

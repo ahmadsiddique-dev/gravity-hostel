@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { success: false, message: "Data is missing" },
       { status: 400 },
-    );
+    ); 
   }
 
   const response = await FeeModel.insertOne(data)
