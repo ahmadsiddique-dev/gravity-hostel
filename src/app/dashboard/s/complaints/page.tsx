@@ -26,6 +26,7 @@ import {
 import axios from "axios";
 import { toast } from "sonner";
 import { getId } from "@/hooks/get-id";
+import { formatUtcTime } from "../attendence/page";
 
 interface IComplaints {
   title: string;
@@ -33,176 +34,21 @@ interface IComplaints {
   _id: string | null;
 }
 
-const complaintList = [
-  {
-    id: 1,
-    title: "Time waste",
-    date: "15/12/2025",
-    message: "Happy",
-    status: "Pending",
-  },
-  {
-    id: 2,
-    title: "water is too cold",
-    date: "11/12/2025",
-    message: "we want heater because of winter water is too cold",
-    status: "Pending",
-  },
-  {
-    id: 3,
-    title: "hello dear",
-    date: "10/12/2025",
-    message: "just wanted to know about your health hope you are fine",
-    status: "Resolved",
-  },
-  {
-    id: 4,
-    title: "broom",
-    date: "10/12/2025",
-    message: "do not broom",
-    status: "Rejected",
-  },
-  {
-    id: 1,
-    title: "Time waste",
-    date: "15/12/2025",
-    message: "Happy",
-    status: "Pending",
-  },
-  {
-    id: 2,
-    title: "water is too cold",
-    date: "11/12/2025",
-    message: "we want heater because of winter water is too cold",
-    status: "Pending",
-  },
-  {
-    id: 3,
-    title: "hello dear",
-    date: "10/12/2025",
-    message: "just wanted to know about your health hope you are fine",
-    status: "Resolved",
-  },
-  {
-    id: 4,
-    title: "broom",
-    date: "10/12/2025",
-    message: "do not broom",
-    status: "Rejected",
-  },
-  {
-    id: 1,
-    title: "Time waste",
-    date: "15/12/2025",
-    message: "Happy",
-    status: "Pending",
-  },
-  {
-    id: 2,
-    title: "water is too cold",
-    date: "11/12/2025",
-    message: "we want heater because of winter water is too cold",
-    status: "Pending",
-  },
-  {
-    id: 3,
-    title: "hello dear",
-    date: "10/12/2025",
-    message: "just wanted to know about your health hope you are fine",
-    status: "Resolved",
-  },
-  {
-    id: 4,
-    title: "broom",
-    date: "10/12/2025",
-    message: "do not broom",
-    status: "Rejected",
-  },
-  {
-    id: 1,
-    title: "Time waste",
-    date: "15/12/2025",
-    message: "Happy",
-    status: "Pending",
-  },
-  {
-    id: 2,
-    title: "water is too cold",
-    date: "11/12/2025",
-    message: "we want heater because of winter water is too cold",
-    status: "Pending",
-  },
-  {
-    id: 3,
-    title: "hello dear",
-    date: "10/12/2025",
-    message: "just wanted to know about your health hope you are fine",
-    status: "Resolved",
-  },
-  {
-    id: 4,
-    title: "broom",
-    date: "10/12/2025",
-    message: "do not broom",
-    status: "Rejected",
-  },
-  {
-    id: 1,
-    title: "Time waste",
-    date: "15/12/2025",
-    message: "Happy",
-    status: "Pending",
-  },
-  {
-    id: 2,
-    title: "water is too cold",
-    date: "11/12/2025",
-    message: "we want heater because of winter water is too cold",
-    status: "Pending",
-  },
-  {
-    id: 3,
-    title: "hello dear",
-    date: "10/12/2025",
-    message: "just wanted to know about your health hope you are fine",
-    status: "Resolved",
-  },
-  {
-    id: 4,
-    title: "broom",
-    date: "10/12/2025",
-    message: "do not broom",
-    status: "Rejected",
-  },
-  {
-    id: 1,
-    title: "Time waste",
-    date: "15/12/2025",
-    message: "Happy",
-    status: "Pending",
-  },
-  {
-    id: 2,
-    title: "water is too cold",
-    date: "11/12/2025",
-    message: "we want heater because of winter water is too cold",
-    status: "Pending",
-  },
-  {
-    id: 3,
-    title: "hello dear",
-    date: "10/12/2025",
-    message: "just wanted to know about your health hope you are fine",
-    status: "Resolved",
-  },
-  {
-    id: 4,
-    title: "broom",
-    date: "10/12/2025",
-    message: "do not broom",
-    status: "Rejected",
-  },
-];
+interface IComplaintList {
+  _id: string;
+  title: string;
+  description: string;
+  status: string;
+  updatedAt: Date;
+}
+
+  // {
+  //   id: 1,
+  //   title: "Time waste",
+  //   date: "15/12/2025",
+  //   message: "Happy",
+  //   status: "Pending",
+  // },
 
 export default function MyComplaintsPage() {
   const [complaints, setComplaints] = useState<IComplaints>({
@@ -210,8 +56,8 @@ export default function MyComplaintsPage() {
     description: "",
     _id: null,
   });
+  const [complaintList, setComplaintList] = useState<IComplaintList[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false);
-
 
   // For fetching complaints
     const _id = getId();
@@ -226,6 +72,7 @@ export default function MyComplaintsPage() {
       else {
         toast.error(response.data.message);
         console.log("data:", response.data.data)
+        setComplaintList(response.data.data)
       }
     } catch (error) {
       toast.error("Internal server Error");
@@ -283,7 +130,7 @@ export default function MyComplaintsPage() {
                 <Plus className="h-4 w-4" />
                 New Complaint
               </Button>
-            </DialogTrigger>
+            </DialogTrigger> 
             <DialogContent className="sm:max-w-106.25 bg-[#020617] border-slate-800 text-slate-100">
               <DialogHeader>
                 <DialogTitle className="text-xl font-bold">
@@ -346,7 +193,7 @@ export default function MyComplaintsPage() {
           <div className="divide-y divide-border">
             {complaintList.map((item) => (
               <div
-                key={item.id}
+                key={item._id}
                 className="group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5 transition-all hover:bg-secondary/10"
               >
                 <div className="hidden sm:flex flex-none h-10 w-10 items-center justify-center rounded-full bg-secondary/50 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
@@ -358,11 +205,11 @@ export default function MyComplaintsPage() {
                       {item.title}
                     </h3>
                     <span className="text-[10px] text-muted-foreground font-medium flex items-center gap-1 bg-secondary/30 px-2 py-0.5 rounded">
-                      <Calendar size={10} /> Submitted on {item.date}
+                      <Calendar size={10} /> Submitted on {formatUtcTime(item.updatedAt.toString())}
                     </span>
                   </div>
                   <p className="text-sm text-muted-foreground leading-relaxed line-clamp-1 group-hover:line-clamp-none transition-all">
-                    {item.message}
+                    {item.description}
                   </p>
                 </div>
                 <div className="flex flex-row sm:flex-col items-center gap-3 sm:items-end flex-none w-full sm:w-auto mt-2 sm:mt-0 pt-3 sm:pt-0 border-t sm:border-none border-border/50">
@@ -393,6 +240,8 @@ function StatusBadge({ status }: { status: string }) {
       icon: <XCircle size={12} />,
     },
   };
+  status = status.toLocaleLowerCase()[0].toUpperCase() + status.substring(1, status.length).toLocaleLowerCase(); // What that hell I am doing this is not good approach but who cares
+
   const config = configs[status];
   return (
     <Badge

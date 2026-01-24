@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const complaints = await ComplaintModel.find({ student: student._id });
+    const complaints = await ComplaintModel.find({ student: student._id }, {_id: 1, title: 1, description: 1, status: 1, updatedAt: 1});
 
     if (!complaints || complaints.length === 0) {
       return NextResponse.json(
