@@ -2,22 +2,21 @@ import mongoose, { Schema, model, Document, Types } from "mongoose";
 
 
 export interface Fee extends Document {
-    student: Types.ObjectId;
+    student: string;
     month: number;
     year: number;
     amount: number;
     roomRent: number;
     messFee: number;
     status: 'paid' | 'unpaid';
-    paidAmount: number;
-    paidDate?: Date;
-    dueDate: Date;
+    paidAmount: number | null;
+    paidDate?: string | null;
+    dueDate: string;
 }
 
 const FeeSchema: Schema<Fee> = new Schema({
     student: {
-        type: Types.ObjectId,
-        ref: 'Student',
+        type: String,
         required: true,
     },
     month: {
@@ -44,19 +43,19 @@ const FeeSchema: Schema<Fee> = new Schema({
     status: {
         type: String,
         enum: ['paid', 'unpaid'],
+        default: 'unpaid',
         required: true,
     },
     paidAmount: {
-        type: Number,
-        required: true,
+        type: Number || null,
+        default: null
     },
     paidDate: {
-        type: Date,
-        required: false,
-        default: Date.now,
+        type: String || null,
+        default: null
     },
     dueDate: {
-        type: Date,
+        type: String,
         required: true,
     },
 }, { timestamps: true });
