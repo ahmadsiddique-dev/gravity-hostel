@@ -3,6 +3,7 @@ import { AttendenceModel } from "@/models/Attendence.model";
 import { StudentModel } from "@/models/StudentSignup.model";
 import "@/models/Signup.model";
 import "@/models/Room.model";
+import '@/models/Attendence.model';
 
 import { Student } from "@/app/dashboard/a/attendence/page";
 import { isValidObjectId } from "mongoose";

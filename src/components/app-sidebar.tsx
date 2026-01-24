@@ -23,7 +23,8 @@ import {
   IconMessageDots,
   IconMessageChatbot,
   IconBuilding,
-  IconUserPlus
+  IconUserPlus,
+  IconReceipt2
 } from "@tabler/icons-react"
 
 import { NavDocuments } from "@/components/nav-documents"
@@ -112,6 +113,11 @@ const data = {
     title: "Notifications",
     url: "/dashboard/a/notification",
     icon: IconBell, // unchanged
+  },
+  {
+    title: "Vouchers",
+    url: "/dashboard/a/assign-voucher",
+    icon: IconReceipt2, 
   },
   {
     title: "Complaints",
