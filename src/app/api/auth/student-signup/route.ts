@@ -31,7 +31,6 @@ export async function POST(request: Request) {
     email: studentDetail.studentEmail,
   });
 
-  console.log("studentExist", studentExist);
   if (studentExist)
     return NextResponse.json(
       { success: false, message: "Student already exists please Login" },
