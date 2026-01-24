@@ -1,6 +1,8 @@
 import dbConnect from "@/connection/dbconnect";
 import { StudentModel } from "@/models/StudentSignup.model";
 import { FeeModel } from "@/models/Fee.model";
+import '@/models/Signup.model'
+import '@/models/Room.model'
 
 export const dynamic = "force-dynamic";
 
@@ -10,7 +12,7 @@ export async function GET(request: Request) {
 
     const { searchParams } = new URL(request.url);
     const month = searchParams.get("month");
-    const year = searchParams.get("year");
+    const year = searchParams.get("year"); 
 
     if (!month || !year) {
       return Response.json(
