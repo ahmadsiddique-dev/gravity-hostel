@@ -8,6 +8,7 @@ import {
   MessageSquare,
   Calendar,
   ChevronRight,
+  Loader2,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
@@ -42,46 +43,41 @@ interface IComplaintList {
   updatedAt: Date;
 }
 
-  // {
-  //   id: 1,
-  //   title: "Time waste",
-  //   date: "15/12/2025",
-  //   message: "Happy",
-  //   status: "Pending",
-  // },
-
 export default function MyComplaintsPage() {
   const [complaints, setComplaints] = useState<IComplaints>({
     title: "",
     description: "",
     _id: null,
   });
-  const [complaintList, setComplaintList] = useState<IComplaintList[]>([])
+  const [complaintList, setComplaintList] = useState<IComplaintList[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // For fetching complaints
-    const _id = getId();
-  
+  const _id = getId();
+
   const fetchComplaints = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(`/api/s/complaint?_id=${_id}`);
-      
+
       if (!response.data.success) {
         toast.error(response.data.message);
-      }
-      else {
+      } else {
         toast.error(response.data.message);
-        console.log("data:", response.data.data)
-        setComplaintList(response.data.data)
+        console.log("data:", response.data.data);
+        setComplaintList(response.data.data);
       }
     } catch (error) {
       toast.error("Internal server Error");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchComplaints()
-  }, [])
+    fetchComplaints();
+  }, []);
   // For submitting the complaint ok
   const handleSubmit = async () => {
     setIsSubmitting(true);
@@ -130,7 +126,7 @@ export default function MyComplaintsPage() {
                 <Plus className="h-4 w-4" />
                 New Complaint
               </Button>
-            </DialogTrigger> 
+            </DialogTrigger>
             <DialogContent className="sm:max-w-106.25 bg-[#020617] border-slate-800 text-slate-100">
               <DialogHeader>
                 <DialogTitle className="text-xl font-bold">
@@ -187,38 +183,49 @@ export default function MyComplaintsPage() {
           </Dialog>
         </div>
       </div>
-
+                    {/* {} */}
       <div className="flex-1 flex flex-co bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
         <ScrollArea className="flex-1 h-[70vh] w-full">
-          <div className="divide-y divide-border">
-            {complaintList.map((item) => (
-              <div
-                key={item._id}
-                className="group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5 transition-all hover:bg-secondary/10"
-              >
-                <div className="hidden sm:flex flex-none h-10 w-10 items-center justify-center rounded-full bg-secondary/50 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-                  <MessageSquare size={18} />
-                </div>
-                <div className="flex-1 space-y-1.5">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-sm font-bold text-foreground leading-none">
-                      {item.title}
-                    </h3>
-                    <span className="text-[10px] text-muted-foreground font-medium flex items-center gap-1 bg-secondary/30 px-2 py-0.5 rounded">
-                      <Calendar size={10} /> Submitted on {formatUtcTime(item.updatedAt.toString())}
-                    </span>
+        {isLoading ? (
+          <>
+            <div className="flex w-full justify-center items-center">
+              <Loader2 className="animate-spin h-14 w-14" />
+            </div>
+          </>
+        ) : (
+          <>
+              <div className="divide-y divide-border">
+                {complaintList.map((item) => (
+                  <div
+                    key={item._id}
+                    className="group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5 transition-all hover:bg-secondary/10"
+                  >
+                    <div className="hidden sm:flex flex-none h-10 w-10 items-center justify-center rounded-full bg-secondary/50 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                      <MessageSquare size={18} />
+                    </div>
+                    <div className="flex-1 space-y-1.5">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="text-sm font-bold text-foreground leading-none">
+                          {item.title}
+                        </h3>
+                        <span className="text-[10px] text-muted-foreground font-medium flex items-center gap-1 bg-secondary/30 px-2 py-0.5 rounded">
+                          <Calendar size={10} /> Submitted on{" "}
+                          {formatUtcTime(item.updatedAt.toString())}
+                        </span>
+                      </div>
+                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-1 group-hover:line-clamp-none transition-all">
+                        {item.description}
+                      </p>
+                    </div>
+                    <div className="flex flex-row sm:flex-col items-center gap-3 sm:items-end flex-none w-full sm:w-auto mt-2 sm:mt-0 pt-3 sm:pt-0 border-t sm:border-none border-border/50">
+                      <StatusBadge status={item.status} />
+                      {/* <ChevronRight size={16} className="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block" /> */}
+                    </div>
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-1 group-hover:line-clamp-none transition-all">
-                    {item.description}
-                  </p>
-                </div>
-                <div className="flex flex-row sm:flex-col items-center gap-3 sm:items-end flex-none w-full sm:w-auto mt-2 sm:mt-0 pt-3 sm:pt-0 border-t sm:border-none border-border/50">
-                  <StatusBadge status={item.status} />
-                  {/* <ChevronRight size={16} className="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block" /> */}
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
+          </>
+        )}
         </ScrollArea>
       </div>
     </div>
@@ -240,7 +247,9 @@ function StatusBadge({ status }: { status: string }) {
       icon: <XCircle size={12} />,
     },
   };
-  status = status.toLocaleLowerCase()[0].toUpperCase() + status.substring(1, status.length).toLocaleLowerCase(); // What that hell I am doing this is not good approach but who cares
+  status =
+    status.toLocaleLowerCase()[0].toUpperCase() +
+    status.substring(1, status.length).toLocaleLowerCase(); // What that hell I am doing this is not good approach but who cares
 
   const config = configs[status];
   return (
