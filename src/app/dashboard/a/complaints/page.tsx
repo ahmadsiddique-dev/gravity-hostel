@@ -21,72 +21,21 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import axios from "axios";
 import { toast } from "sonner";
-import { getId } from "@/hooks/get-id";
 import { formatUtcTime } from "../../s/attendence/page";
-
-// const initialComplaints = [
-//   {
-//     id: 1,
-//     title: "hello dear",
-//     student: "Ali Hassan",
-//     date: "10/12/2025",
-//     description: "just wanted to know about your health hope you are fine",
-//     status: "RESOLVED",
-//   },
-//   {
-//     id: 2,
-//     title: "broom",
-//     student: "Ali Hassan",
-//     date: "10/12/2025",
-//     description: "do not broom",
-//     status: "REJECTED",
-//   },
-//   {
-//     id: 3,
-//     title: "Noisy roommate",
-//     student: "Iftikhar Ahmed",
-//     date: "02/12/2025",
-//     description: "My roommate plays loud music late at night.",
-//     status: "PENDING",
-//   },
-//   {
-//     id: 1,
-//     title: "hello dear",
-//     student: "Ali Hassan",
-//     date: "10/12/2025",
-//     description: "just wanted to know about your health hope you are fine",
-//     status: "RESOLVED",
-//   },
-//   {
-//     id: 2,
-//     title: "broom",
-//     student: "Ali Hassan",
-//     date: "10/12/2025",
-//     description: "do not broom",
-//     status: "REJECTED",
-//   },
-//   {
-//     id: 3,
-//     title: "Noisy roommate",
-//     student: "Iftikhar Ahmed",
-//     date: "02/12/2025",
-//     description: "My roommate plays loud music late at night.",
-//     status: "PENDING",
-//   },
-// ];
 
 export interface IRecord {
   id: string;
   title: string;
   number: string;
-  date: string; 
+  date: string;
   description: string;
-  status: "PENDING" | "REJECTED" | "RESOLVED"; 
+  status: "PENDING" | "REJECTED" | "RESOLVED";
 }
+
 export default function ComplaintsManagement() {
   const [filter, setFilter] = useState("all");
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [complaintsData, setComplaintsData] = useState<IRecord[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const complaints = async () => {
     try {
@@ -94,36 +43,24 @@ export default function ComplaintsManagement() {
 
       if (!response.data.success) {
         toast.error(response.data.message);
-      }
-      else {
-        toast.error(response.data.message);
-        console.log("data:", response.data.data)
-        setComplaintsData(response.data.data)
+      } else {
+        setComplaintsData(response.data.data);
       }
     } catch (error) {
       toast.error("Internal server Error");
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     complaints();
-  }, [])
+  }, []);
 
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
-    try {
-      const response = await axios.post("/api/s/complaint");
-      if (!response.data.success) {
-        toast.error(response.data.message);
-      } else {
-        toast.success(response.data.message);
-      }
-    } catch (error) {
-      toast.error("Unexpecter Error Occured");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const filteredComplaints = complaintsData.filter((item) => {
+    if (filter === "all") return true;
+    return item.status === filter;
+  });
 
   return (
     <div className="flex flex-col max-w-6xl mx-auto overflow-hidden">
@@ -134,7 +71,7 @@ export default function ComplaintsManagement() {
             Track and resolve student issues
           </p>
         </div>
-        
+
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <Filter className="h-4 w-4 text-muted-foreground hidden sm:block" />
           <Select defaultValue="all" onValueChange={setFilter}>
@@ -152,10 +89,21 @@ export default function ComplaintsManagement() {
       </div>
 
       <div className="">
-        <ScrollArea className="flex-1 flex flex-col  space-y-4 pb-8 gap-2.5 h-[78vh] pr-4">
-          {complaintsData.map((complaint) => (
-            <ComplaintCard key={complaint.id} complaint={complaint} />
-          ))}
+        <ScrollArea className="flex-1 flex flex-col space-y-4 pb-8 gap-2.5 h-[78vh] pr-4">
+          {loading ? (
+            <div className="space-y-3">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div
+                  key={i}
+                  className="w-full h-32 rounded-xl bg-secondary/20 animate-pulse border border-border"
+                />
+              ))}
+            </div>
+          ) : (
+            filteredComplaints.map((complaint) => (
+              <ComplaintCard key={complaint.id} complaint={complaint} />
+            ))
+          )}
         </ScrollArea>
       </div>
     </div>
@@ -163,11 +111,35 @@ export default function ComplaintsManagement() {
 }
 
 function ComplaintCard({ complaint }: { complaint: IRecord }) {
-  const [currentStatus, setCurrentStatus] = useState(complaint.status);
+  const [status, setStatus] = useState(complaint.status);
+  const [loading, setLoading] = useState(false);
+
+  async function handleStatusUpdate(newStatus: string) {
+    if (status === newStatus || loading) return;
+
+    setLoading(true);
+    try {
+      const response = await axios.post("/api/a/complaint", {
+        _id: complaint.id,
+        status: newStatus,
+      });
+
+      if (response.data.success) {
+        toast.success(response.data.message);
+        setStatus(newStatus as any);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error("Unexpected Error Occurred");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
-    <Card className="bg-card mb-2.5 border-border  hover:border-muted-foreground/20 transition-all overflow-hidden">
-      <CardContent className="p-0 ">
+    <Card className="bg-card mb-2.5 border-border hover:border-muted-foreground/20 transition-all overflow-hidden">
+      <CardContent className="p-0">
         <div className="flex flex-col md:flex-row">
           <div className="flex-1 p-5 space-y-3">
             <div className="flex items-start justify-between gap-4">
@@ -177,14 +149,15 @@ function ComplaintCard({ complaint }: { complaint: IRecord }) {
                 </h3>
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
                   <span className="flex items-center gap-1">
-                    <MessageSquare className="h-3 w-3" /> {complaint.description}
+                    <MessageSquare className="h-3 w-3" /> {complaint.number}
                   </span>
                   <span className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" /> {formatUtcTime(complaint.date)}
+                    <Clock className="h-3 w-3" />{" "}
+                    {formatUtcTime(complaint.date)}
                   </span>
                 </div>
               </div>
-              <StatusBadge status={currentStatus} />
+              <StatusBadge status={status} />
             </div>
 
             <p className="text-sm text-muted-foreground line-clamp-2 italic">
@@ -193,20 +166,22 @@ function ComplaintCard({ complaint }: { complaint: IRecord }) {
           </div>
 
           <div className="flex-none bg-secondary/20 md:w-48 border-t md:border-t-0 md:border-l border-border p-4 flex md:flex-col justify-center items-center gap-2">
-            {currentStatus === "PENDING" ? (
+            {status === "PENDING" ? (
               <>
                 <Button
                   size="sm"
                   variant="outline"
+                  disabled={loading}
                   className="w-full gap-2 border-destructive/50 text-destructive hover:bg-destructive/10"
-                  onClick={() => setCurrentStatus("REJECTED")}
+                  onClick={() => handleStatusUpdate("REJECTED")}
                 >
                   <XCircle className="h-4 w-4" /> Reject
                 </Button>
                 <Button
                   size="sm"
+                  disabled={loading}
                   className="w-full gap-2 bg-emerald-600 hover:bg-emerald-700"
-                  onClick={() => setCurrentStatus("RESOLVED")}
+                  onClick={() => handleStatusUpdate("RESOLVED")}
                 >
                   <CheckCircle2 className="h-4 w-4" /> Resolve
                 </Button>
@@ -215,8 +190,9 @@ function ComplaintCard({ complaint }: { complaint: IRecord }) {
               <Button
                 variant="ghost"
                 size="sm"
+                disabled={loading}
                 className="w-full gap-2 text-muted-foreground hover:text-foreground"
-                onClick={() => setCurrentStatus("PENDING")}
+                onClick={() => handleStatusUpdate("PENDING")}
               >
                 <RefreshCcw className="h-4 w-4" /> Reopen
               </Button>

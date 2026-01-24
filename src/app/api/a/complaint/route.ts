@@ -39,3 +39,30 @@ export async function GET() {
     );
   }
 }
+
+
+export async function POST(request: Request) {
+  const{ _id, status } = await request.json();
+
+  try {
+    await dbConnect();
+
+    const response = await ComplaintModel.findOneAndUpdate({ _id: _id}, { status: status})
+    
+    if (!response) {
+      return Response.json(
+        { success: false, message: "Cannot update" },
+        { status: 500 },
+      );
+    }
+    return Response.json(
+      { success: true, message: "Data found", data: response},
+      { status: 200 },
+    );
+  } catch (error) {
+    return Response.json(
+      { success: false, message: "Something went wrong" },
+      { status: 500 },
+    );
+  }
+}
