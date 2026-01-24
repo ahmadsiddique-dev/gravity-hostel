@@ -5,7 +5,7 @@ export interface Complaint extends Document {
     title: string;
     description: string;
     category: 'maintenance' | 'academic' | 'other';
-    status: 'pending' | 'in-progress' | 'resolved';
+    status: 'PENDING' | 'REDJECTED' | 'RESOLVED';
     resolvedAt?: Date;
 }
 
@@ -23,16 +23,10 @@ const ComplaintSchema: Schema<Complaint> = new Schema({
         type: String,
         required: true,
     },
-    category: {
-        type: String,
-        enum: ['maintenance', 'academic', 'other'],
-        default: 'other',
-        required: true,
-    },
     status: {
         type: String,
-        enum: ['pending', 'in-progress', 'resolved'],
-        default: 'pending',
+        enum: ['PENDING', 'REJECTED', 'RESOLVED'],
+        default: 'PENDING',
     },
     resolvedAt: {
         type: Date,

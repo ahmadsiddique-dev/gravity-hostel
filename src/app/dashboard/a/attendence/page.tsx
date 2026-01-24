@@ -36,15 +36,15 @@ export type Student = {
     number: string;
   };
   present: boolean | null; // added later just for that icon
-  date: string
+  date: string;
 };
 
 export default function AttendanceManager() {
   // Also make the functionality to store in the localstorage
   const [students, setStudents] = React.useState<Student[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [attendenceStatus, setAttendanceStatus] = useState<boolean>(true)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [attendenceStatus, setAttendanceStatus] = useState<boolean>(true);
 
   // For shadcn calendar
   const [open, setOpen] = React.useState(false);
@@ -53,39 +53,40 @@ export default function AttendanceManager() {
   // const studentAttendence = new Map() // will use later for localstorage.
 
   const getFormattedDate = (input: string | Date = new Date()): string => {
-  const date = new Date(input);
+    const date = new Date(input);
 
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
 
-  return `${day}/${month}/${year}`;
-};
+    return `${day}/${month}/${year}`;
+  };
   useEffect(() => {
     async function fetchStudents() {
       setIsLoading(true);
       try {
-        const response = await axios.get(`/api/a/data/attendence?date=${getFormattedDate(date)}`);
+        const response = await axios.get(
+          `/api/a/data/attendence?date=${getFormattedDate(date)}`,
+        );
         console.log("Fetched students:", response.data);
         if (!response.data.success) {
           toast.error(response.data.message);
         } else {
           const fetchedData = response.data.data || [];
           if (fetchedData[0].attendance === null) {
-            setAttendanceStatus(false)
+            setAttendanceStatus(false);
+          } else {
+            setAttendanceStatus(true);
           }
-          else {
-            setAttendanceStatus(true)
-          }
-          
+
           const studentsWithDefault = fetchedData.map((student: any) => ({
             ...student,
             present: student.attendance,
-            date: getFormattedDate(date)
+            date: getFormattedDate(date),
           }));
 
-          console.log("SETDEF: ", studentsWithDefault)
-          
+          console.log("SETDEF: ", studentsWithDefault);
+
           setStudents(studentsWithDefault);
           toast.success("Students fetched successfully");
         }
@@ -104,29 +105,31 @@ export default function AttendanceManager() {
   }, [date]);
 
   const handleSubmit = async (data: Student[]) => {
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     try {
-      const response = await axios.post('/api/a/data/attendence', data)
+      const response = await axios.post("/api/a/data/attendence", data);
       if (!response.data.success) {
         toast.error(response.data.message);
-      }
-      else {
+      } else {
         toast.success(response.data.message);
         setAttendanceStatus(true);
       }
     } catch (error) {
-      toast.error("Unexpecter Error Occured")
+      toast.error("Unexpecter Error Occured");
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col h-[90vh] max-w-5xl mx-auto p-4 md:p-6 overflow-hidden">
       <div className="flex-none space-y-4 mb-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-card border border-border p-3 rounded-xl shadow-sm">
           <div className="flex items-center gap-2 bg-secondary/50 p-1 rounded-lg border border-border w-full sm:w-auto justify-between sm:justify-start">
-          <Dot className={`${attendenceStatus ? "text-green-500": "text-amber-400"}`} size={40} />
+            <Dot
+              className={`${attendenceStatus ? "text-green-500" : "text-amber-400"}`}
+              size={40}
+            />
             <div className="flex items-center gap-2 px-3 font-medium text-sm">
               {/* <Calendar className="h-4 w-4 text-muted-foreground" /> */}
               <Popover open={open} onOpenChange={setOpen}>
@@ -180,9 +183,15 @@ export default function AttendanceManager() {
               <CheckCircle2 className="h-4 w-4" />
               Mark All
             </Button>
-            <Button disabled={isSubmitting || attendenceStatus} size="sm" onClick={() => handleSubmit(students)} className="flex-1 sm:flex-none gap-2 h-9">
+            <Button
+              disabled={isSubmitting || attendenceStatus}
+              size="sm"
+              onClick={() => handleSubmit(students)}
+              className="flex-1 sm:flex-none gap-2 h-9"
+            >
               <Save className="h-4 w-4" />
-              {isSubmitting && <Loader2 className="animate-spin"/>}Save Attendance
+              {isSubmitting && <Loader2 className="animate-spin" />}Save
+              Attendance
             </Button>
           </div>
         </div>
@@ -243,7 +252,11 @@ export default function AttendanceManager() {
                             setStudents(
                               students.map((s) =>
                                 s._id === student._id
-                                  ? { ...s, present: true, date: getFormattedDate(date) }
+                                  ? {
+                                      ...s,
+                                      present: true,
+                                      date: getFormattedDate(date),
+                                    }
                                   : s,
                               ),
                             );
@@ -260,7 +273,11 @@ export default function AttendanceManager() {
                             setStudents(
                               students.map((s) =>
                                 s._id === student._id
-                                  ? { ...s, present: false, date: getFormattedDate(date)}
+                                  ? {
+                                      ...s,
+                                      present: false,
+                                      date: getFormattedDate(date),
+                                    }
                                   : s,
                               ),
                             );

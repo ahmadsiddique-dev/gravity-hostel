@@ -1,12 +1,12 @@
-"use client"
-import React, { useState } from "react";
-import { 
-  Filter, 
-  CheckCircle2, 
-  XCircle, 
-  RefreshCcw, 
+"use client";
+import React, { useEffect, useState } from "react";
+import {
+  Filter,
+  CheckCircle2,
+  XCircle,
+  RefreshCcw,
   MessageSquare,
-  Clock
+  Clock,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import axios from "axios";
+import { toast } from "sonner";
+import { getId } from "@/hooks/get-id";
 
 const initialComplaints = [
   {
@@ -73,20 +76,60 @@ const initialComplaints = [
 
 export default function ComplaintsManagement() {
   const [filter, setFilter] = useState("all");
+  // const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // const _id = getId();
+
+  // const complaints = async () => {
+  //   try {
+  //     const response = await axios.get(`/api/s/complaint?_id=${_id}`);
+
+  //     if (!response.data.success) {
+  //       toast.error(response.data.message);
+  //     }
+  //     else {
+  //       toast.error(response.data.message);
+  //       console.log("data:", response.data.data)
+  //     }
+  //   } catch (error) {
+  //     toast.error("Internal server Error");
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   complaints();
+  // }, [])
+
+  // const handleSubmit = async () => {
+  //   setIsSubmitting(true);
+  //   try {
+  //     const response = await axios.post("/api/s/complaint");
+  //     if (!response.data.success) {
+  //       toast.error(response.data.message);
+  //     } else {
+  //       toast.success(response.data.message);
+  //     }
+  //   } catch (error) {
+  //     toast.error("Unexpecter Error Occured");
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
 
   return (
     <div className="flex flex-col max-w-6xl mx-auto overflow-hidden">
-      {/* Fixed Header Area */}
       <div className="flex-none pt-1.5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Complaints</h1>
-          <p className="text-sm text-muted-foreground">Track and resolve student issues</p>
+          <p className="text-sm text-muted-foreground">
+            Track and resolve student issues
+          </p>
         </div>
 
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <Filter className="h-4 w-4 text-muted-foreground hidden sm:block" />
           <Select defaultValue="all" onValueChange={setFilter}>
-            <SelectTrigger className="w-full sm:w-[180px] bg-card border-border h-10">
+            <SelectTrigger className="w-full sm:w-45 bg-card border-border h-10">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent>
@@ -99,14 +142,13 @@ export default function ComplaintsManagement() {
         </div>
       </div>
 
-      {/* Scrollable List Area */}
-        <div className="">
-      <ScrollArea className="flex-1 flex flex-col  space-y-4 pb-8 gap-2.5 h-[78vh] pr-4">
+      <div className="">
+        <ScrollArea className="flex-1 flex flex-col  space-y-4 pb-8 gap-2.5 h-[78vh] pr-4">
           {initialComplaints.map((complaint) => (
             <ComplaintCard key={complaint.id} complaint={complaint} />
           ))}
-      </ScrollArea>
-        </div>
+        </ScrollArea>
+      </div>
     </div>
   );
 }
@@ -115,15 +157,15 @@ function ComplaintCard({ complaint }: { complaint: any }) {
   const [currentStatus, setCurrentStatus] = useState(complaint.status);
 
   return (
-      
     <Card className="bg-card mb-2.5 border-border  hover:border-muted-foreground/20 transition-all overflow-hidden">
       <CardContent className="p-0 ">
         <div className="flex flex-col md:flex-row">
-          {/* Main Content Area */}
           <div className="flex-1 p-5 space-y-3">
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-1">
-                <h3 className="font-bold text-lg leading-tight">{complaint.title}</h3>
+                <h3 className="font-bold text-lg leading-tight">
+                  {complaint.title}
+                </h3>
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <MessageSquare className="h-3 w-3" /> {complaint.student}
@@ -141,20 +183,19 @@ function ComplaintCard({ complaint }: { complaint: any }) {
             </p>
           </div>
 
-          {/* Action Sidebar / Bottom Bar */}
           <div className="flex-none bg-secondary/20 md:w-48 border-t md:border-t-0 md:border-l border-border p-4 flex md:flex-col justify-center items-center gap-2">
             {currentStatus === "PENDING" ? (
               <>
-                <Button 
-                  size="sm" 
-                  variant="outline" 
+                <Button
+                  size="sm"
+                  variant="outline"
                   className="w-full gap-2 border-destructive/50 text-destructive hover:bg-destructive/10"
                   onClick={() => setCurrentStatus("REJECTED")}
                 >
                   <XCircle className="h-4 w-4" /> Reject
                 </Button>
-                <Button 
-                  size="sm" 
+                <Button
+                  size="sm"
                   className="w-full gap-2 bg-emerald-600 hover:bg-emerald-700"
                   onClick={() => setCurrentStatus("RESOLVED")}
                 >
@@ -162,9 +203,9 @@ function ComplaintCard({ complaint }: { complaint: any }) {
                 </Button>
               </>
             ) : (
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 className="w-full gap-2 text-muted-foreground hover:text-foreground"
                 onClick={() => setCurrentStatus("PENDING")}
               >
@@ -186,7 +227,10 @@ function StatusBadge({ status }: { status: string }) {
   };
 
   return (
-    <Badge variant="outline" className={`${variants[status]} border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider`}>
+    <Badge
+      variant="outline"
+      className={`${variants[status]} border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider`}
+    >
       {status}
     </Badge>
   );
