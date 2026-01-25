@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     const objectId = new mongoose.Types.ObjectId(_id);
 
     console.log("Object id: ", objectId)
-    const res: any = await StudentModel.find({ user: objectId }).populate("user").populate("room")
+    const res: any = await StudentModel.find({ _id: objectId }).populate("user").populate("room")
 
     if (!res.length) {
       return Response.json(
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
         room: {
             number: response.room.number,
             type: response.room.type,
-            price: response.room.amount,
+            price: response.room.price,
             floor: response.room.floor,
             status: response.room.status,
         },

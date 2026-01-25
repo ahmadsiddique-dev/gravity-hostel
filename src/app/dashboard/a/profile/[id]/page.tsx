@@ -69,7 +69,7 @@ export default function StudentProfile({ params }: any) {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await axios.post("/api/a/profile-data", { _id: id });
+      const response = await axios.post("/api/a/profile-dataa", { _id: id });
 
       if (!response.data.success) {
         toast.error("Failed to fetch data");
