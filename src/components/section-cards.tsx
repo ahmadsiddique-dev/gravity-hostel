@@ -1,6 +1,11 @@
-import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react"
+"use client"
+import {
+  IconSchool,
+  IconTrendingDown,
+  IconTrendingUp,
+} from "@tabler/icons-react";
 
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardAction,
@@ -8,11 +13,36 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
+import { CircleDollarSign, Mail, School } from "lucide-react";
+import { useEffect } from "react";
+import axios from "axios";
+import { toast } from "sonner";
 
 export function SectionCards() {
+
+  // useEffect(() => {
+  //   async function fetchCardData() {
+  //     try {
+  //       const response = await axios.get(
+  //         `/api/a/data/dashboard-card`,
+  //       );
+
+  //       if (!response.data.success) {
+  //         toast.error(response.data.message)
+  //       }
+  //       else {
+  //         toast.success(response.data.message)
+  //       }
+  //     } catch (error) {
+  //       toast.error("Failed to fetch students");
+  //     } finally {
+  //     }
+  //   }
+  //   fetchCardData();
+  // }, []);
   return (
-    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
+    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Total Revenue</CardDescription>
@@ -21,8 +51,7 @@ export function SectionCards() {
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
-              <IconTrendingUp />
-              +12.5%
+              <CircleDollarSign />
             </Badge>
           </CardAction>
         </CardHeader>
@@ -43,8 +72,7 @@ export function SectionCards() {
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
-              <IconTrendingDown />
-              -20%
+              <IconSchool />
             </Badge>
           </CardAction>
         </CardHeader>
@@ -65,8 +93,7 @@ export function SectionCards() {
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
-              <IconTrendingUp />
-              +12.5%
+              <School />
             </Badge>
           </CardAction>
         </CardHeader>
@@ -85,8 +112,7 @@ export function SectionCards() {
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
-              <IconTrendingUp />
-              +4.5%
+              <Mail />
             </Badge>
           </CardAction>
         </CardHeader>
@@ -98,5 +124,5 @@ export function SectionCards() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
