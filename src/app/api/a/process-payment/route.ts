@@ -3,9 +3,9 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const { voucherId } = await request.json();
+    const { voucherId, amount } = await request.json();
 
-    if (!voucherId) {
+    if (!voucherId || !amount) {
       return NextResponse.json(
         { success: false, message: "Voucher ID is required" },
         { status: 400 }
@@ -17,6 +17,7 @@ export async function POST(request: Request) {
       {
         $set: {
           status: "paid",
+          paidAmount: amount,
           paidDate: new Date(),
         },
       },

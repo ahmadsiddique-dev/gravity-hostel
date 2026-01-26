@@ -15,39 +15,52 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CircleDollarSign, Mail, School } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 
+interface IDashboardStats {
+  amount: number;    
+  seat: number;     
+  student: number;  
+  complaint: number; 
+}
+
+
 export function SectionCards() {
+  const [data, setData] = useState<IDashboardStats>({
+    seat: 0,
+    amount: 0,
+    student: 0,
+    complaint: 0,
+  })
+  useEffect(() => {
+    async function fetchCardData() {
+      try {
+        const response = await axios.get(
+          `/api/a/data/dashboard-card`,
+        );
 
-  // useEffect(() => {
-  //   async function fetchCardData() {
-  //     try {
-  //       const response = await axios.get(
-  //         `/api/a/data/dashboard-card`,
-  //       );
-
-  //       if (!response.data.success) {
-  //         toast.error(response.data.message)
-  //       }
-  //       else {
-  //         toast.success(response.data.message)
-  //       }
-  //     } catch (error) {
-  //       toast.error("Failed to fetch students");
-  //     } finally {
-  //     }
-  //   }
-  //   fetchCardData();
-  // }, []);
+        if (!response.data.success) {
+          toast.error(response.data.message)
+        }
+        else {
+          setData(response.data.data)
+        }
+      } catch (error) {
+        toast.error("Failed to fetch students");
+      } finally {
+      }
+    }
+    fetchCardData();
+  }, []);
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Total Revenue</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            $1,250.00
+            {data.amount} PKR
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
@@ -57,18 +70,18 @@ export function SectionCards() {
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Trending up this month <IconTrendingUp className="size-4" />
+            Total Amount Collected <IconTrendingUp className="size-4" />
           </div>
           <div className="text-muted-foreground">
-            Visitors for the last 6 months
+            Stat of 1 month
           </div>
         </CardFooter>
       </Card>
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>New Customers</CardDescription>
+          <CardDescription>Total Student</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            1,234
+            {data.student}
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
@@ -78,18 +91,18 @@ export function SectionCards() {
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Down 20% this period <IconTrendingDown className="size-4" />
+            Total number of active student <IconTrendingDown className="size-4" />
           </div>
           <div className="text-muted-foreground">
-            Acquisition needs attention
+            We need Advertisement to grow.
           </div>
         </CardFooter>
       </Card>
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Active Accounts</CardDescription>
+          <CardDescription>Available Seats</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            45,678
+            {data.seat}
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
@@ -99,16 +112,16 @@ export function SectionCards() {
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Strong user retention <IconTrendingUp className="size-4" />
+            Total Number of Seats <IconTrendingUp className="size-4" />
           </div>
-          <div className="text-muted-foreground">Engagement exceed targets</div>
+          <div className="text-muted-foreground">The total number of Empty seats </div>
         </CardFooter>
       </Card>
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Growth Rate</CardDescription>
+          <CardDescription>Complaints</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            4.5%
+            {data.complaint}
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
@@ -118,9 +131,9 @@ export function SectionCards() {
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Steady performance increase <IconTrendingUp className="size-4" />
+            Total Pending complaints<IconTrendingUp className="size-4" />
           </div>
-          <div className="text-muted-foreground">Meets growth projections</div>
+          <div className="text-muted-foreground">Solve the problem of our students</div>
         </CardFooter>
       </Card>
     </div>

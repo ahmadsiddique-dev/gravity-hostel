@@ -15,7 +15,7 @@ export async function POST(request: Request) {
 
   try {
 
-    const response = await FeeModel.find({ student: _id, status: "unpaid" });
+    const response = await FeeModel.find({ student: _id });
 
     if (!response.length) {
       return Response.json(

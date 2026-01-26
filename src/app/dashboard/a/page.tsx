@@ -13,7 +13,7 @@ import {
 import { useDebounceCallback } from "usehooks-ts";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import axios from "axios";
 import { toast } from "sonner";
@@ -21,8 +21,18 @@ import GradientText from "@/components/GradientText";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const months = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 interface IIncomingData {
@@ -49,10 +59,10 @@ const Page = () => {
   const [findSearch, setFindSearch] = useState("");
   const [inputValue, setInputValue] = useState("");
   const debounced = useDebounceCallback(setFindSearch, 500);
-  
+
   const [incomingData, setincomingData] = useState<IIncomingData[]>([]);
   const [vouchers, setVouchers] = useState<IVoucher[]>([]);
-  
+
   const [isFetchingVouchers, setIsFetchingVouchers] = useState(false);
   const [payingVoucherId, setPayingVoucherId] = useState<string | null>(null);
 
@@ -85,7 +95,7 @@ const Page = () => {
 
   const handleFetchVouchers = async (student: IIncomingData) => {
     setIsFetchingVouchers(true);
-    setVouchers([]); 
+    setVouchers([]);
     try {
       const response = await axios.post("/api/a/pay", { _id: student._id });
       if (response.data.success) {
@@ -100,16 +110,27 @@ const Page = () => {
     }
   };
 
-  const handlePayment = async (voucherId: string) => {
-    setPayingVoucherId(voucherId);
+  const handlePayment = async ({
+    voucherId,
+    amount,
+  }: {
+    voucherId: string;
+    amount: number;
+  }) => {
+    setPayingVoucherId(voucherId); 
     try {
-      const res = await axios.post("/api/a/process-payment", { voucherId });
+      const res = await axios.post("/api/a/process-payment", {
+        voucherId,
+        amount,
+      });
+
       if (res.data.success) {
         toast.success("Payment successful!");
         setVouchers((prev) => prev.filter((v) => v._id !== voucherId));
       }
-    } catch (error) {
-      toast.error("Payment failed");
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || "Payment failed";
+      toast.error(errorMessage);
     } finally {
       setPayingVoucherId(null);
     }
@@ -120,7 +141,6 @@ const Page = () => {
   return (
     <ClientOnly>
       <div className="min-h-screen flex flex-col pb-20">
-        {/* Animated Upper Dashboard Section */}
         <AnimatePresence>
           {!isSearching && (
             <motion.div
@@ -147,7 +167,6 @@ const Page = () => {
         </AnimatePresence>
 
         <motion.div layout className="p-6 max-w-4xl mx-auto w-full space-y-6">
-          {/* Main Search Input */}
           <div className="flex flex-wrap items-center gap-4 bg-secondary/30 p-4 rounded-xl border shadow-sm">
             <div className="relative flex-1 min-w-62.5">
               <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -171,52 +190,57 @@ const Page = () => {
             )}
           </div>
 
-          {/* Student Selection List */}
           <AnimatePresence>
-            {isSearching && incomingData.length > 0 && vouchers.length === 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className="w-full"
-              >
-                <ScrollArea className="h-96 w-full rounded-md border p-4 bg-background/50">
-                  <div className="flex flex-col gap-3">
-                    {incomingData.map((item, index) => (
-                      <motion.div
-                        key={item._id}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                      >
-                        <Card className="p-4 flex items-center justify-between hover:bg-secondary/50 transition-colors cursor-pointer group">
-                          <div className="flex flex-col">
-                            <h3 className="font-medium text-sm md:text-base">
-                              {item.userDetails?.fullName || "Unknown Student"}
-                            </h3>
-                            <p className="text-xs text-muted-foreground font-mono">
-                              ID: {item._id}
-                            </p>
-                          </div>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="group-hover:bg-primary group-hover:text-primary-foreground transition-all"
-                            onClick={() => handleFetchVouchers(item)}
-                            disabled={isFetchingVouchers}
-                          >
-                            {isFetchingVouchers ? <Loader2 className="h-4 w-4 animate-spin" /> : "GO"}
-                          </Button>
-                        </Card>
-                      </motion.div>
-                    ))}
-                  </div>
-                </ScrollArea>
-              </motion.div>
-            )}
+            {isSearching &&
+              incomingData.length > 0 &&
+              vouchers.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="w-full"
+                >
+                  <ScrollArea className="h-96 w-full rounded-md border p-4 bg-background/50">
+                    <div className="flex flex-col gap-3">
+                      {incomingData.map((item, index) => (
+                        <motion.div
+                          key={item._id}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.05 }}
+                        >
+                          <Card className="p-4 flex items-center justify-between hover:bg-secondary/50 transition-colors cursor-pointer group">
+                            <div className="flex flex-col">
+                              <h3 className="font-medium text-sm md:text-base">
+                                {item.userDetails?.fullName ||
+                                  "Unknown Student"}
+                              </h3>
+                              <p className="text-xs text-muted-foreground font-mono">
+                                ID: {item._id}
+                              </p>
+                            </div>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="group-hover:bg-primary group-hover:text-primary-foreground transition-all"
+                              onClick={() => handleFetchVouchers(item)}
+                              disabled={isFetchingVouchers}
+                            >
+                              {isFetchingVouchers ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                "GO"
+                              )}
+                            </Button>
+                          </Card>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                </motion.div>
+              )}
           </AnimatePresence>
 
-          {/* Active Voucher List for Selected Student */}
           <AnimatePresence>
             {vouchers.length > 0 && (
               <motion.div
@@ -226,13 +250,20 @@ const Page = () => {
                 className="space-y-4"
               >
                 <div className="border-b pb-2">
-                  <h3 className="text-xl font-bold text-primary">Pending Vouchers</h3>
-                  <p className="text-sm text-muted-foreground">Select a voucher to mark as paid</p>
+                  <h3 className="text-xl font-bold text-primary">
+                    Pending Vouchers
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Select a voucher to mark as paid
+                  </p>
                 </div>
 
                 <div className="grid gap-4">
                   {vouchers.map((voucher) => (
-                    <Card key={voucher._id} className="overflow-hidden border-l-4 border-l-yellow-500 shadow-md">
+                    <Card
+                      key={voucher._id}
+                      className="overflow-hidden border-l-4 border-l-yellow-500 shadow-md"
+                    >
                       <CardContent className="p-0">
                         <div className="flex flex-col sm:flex-row items-center justify-between p-4 bg-secondary/10 gap-4">
                           <div className="flex items-center gap-4 w-full sm:w-auto">
@@ -244,37 +275,59 @@ const Page = () => {
                                 {months[voucher.month - 1]} {voucher.year}
                               </h4>
                               <p className="text-xs text-muted-foreground">
-                                Due Date: {new Date(voucher.dueDate).toLocaleDateString()}
+                                Due Date:{" "}
+                                {new Date(voucher.dueDate).toLocaleDateString()}
                               </p>
                             </div>
                           </div>
-                          
+
                           <div className="text-right w-full sm:w-auto">
                             <p className="text-2xl font-black text-primary">
                               PKR {voucher.amount.toLocaleString()}
                             </p>
-                            <Badge variant="outline" className="text-[10px] uppercase tracking-wider">
-                              Unpaid
+                            <Badge
+                              variant="outline"
+                              className={`text-[10px] ${voucher.status === "paid" ? "bg-green-500" : "bg-red-500"} uppercase tracking-wider`}
+                            >
+                              {voucher.status}
                             </Badge>
                           </div>
                         </div>
 
                         <div className="px-4 py-2 flex flex-wrap gap-x-6 gap-y-2 text-xs border-t bg-background/50 text-muted-foreground">
-                          <span className="flex gap-1">Room Rent: <strong className="text-foreground">PKR {voucher.roomRent}</strong></span>
-                          <span className="flex gap-1">Mess Fee: <strong className="text-foreground">PKR {voucher.messFee}</strong></span>
+                          <span className="flex gap-1">
+                            Room Rent:{" "}
+                            <strong className="text-foreground">
+                              PKR {voucher.roomRent}
+                            </strong>
+                          </span>
+                          <span className="flex gap-1">
+                            Mess Fee:{" "}
+                            <strong className="text-foreground">
+                              PKR {voucher.messFee}
+                            </strong>
+                          </span>
                         </div>
 
                         <Button
+                          disabled={voucher.status === "paid"}
                           className="w-full rounded-none h-12 gap-2 text-md font-semibold transition-all active:scale-[0.98]"
-                          disabled={payingVoucherId === voucher._id}
-                          onClick={() => handlePayment(voucher._id)}
+                          onClick={() =>
+                            handlePayment({
+                              voucherId: voucher._id,
+                              amount: voucher.amount,
+                            })
+                          }
                         >
-                          {payingVoucherId === voucher._id ? (
+                          {voucher.status === "paid" ? (
+                            "Already Payed"
+                          ) : payingVoucherId === voucher._id ? (
                             <Loader2 className="h-5 w-5 animate-spin" />
                           ) : (
                             <CreditCard className="h-5 w-5" />
                           )}
-                          Confirm & Pay Voucher
+                          {voucher.status !== "paid" &&
+                            "Confirm & Pay Voucher "}
                         </Button>
                       </CardContent>
                     </Card>
