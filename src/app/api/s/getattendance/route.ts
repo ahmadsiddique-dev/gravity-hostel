@@ -5,8 +5,7 @@ import { success } from "zod";
 
 export async function POST(request:Request) {
     const { _id } = await request.json()
-
-    console.log("well Id : ", _id)
+    
     if (!_id) return Response.json({
         success: false,
         message: "Unable to find id"
@@ -25,8 +24,6 @@ export async function POST(request:Request) {
         }, {status: 404})
 
         const response = await AttendenceModel.find({student: studentId?._id}, {date: 1, status: 1, updatedAt: 1})
-
-        console.log("StudentID: ", studentId)
 
         if (!response || !response.length) return Response.json({
         success: false,

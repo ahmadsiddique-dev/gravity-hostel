@@ -12,15 +12,13 @@ export async function POST(request:Request) {
         }, {status: 404})
     }
 
-    console.log("IDM: ", _id)
     try {
 
         const response = await StudentModel.find({user : _id})
             .populate("user", "fullName email ")
         
         const data: any = response[0]
-        console.log("Guru g", data)
-
+        
         const dataToSend = {
             _id: data._id._id.toString(),
             name: data.user.fullName,

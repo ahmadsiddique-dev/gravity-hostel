@@ -178,7 +178,6 @@ const AssignVoucher = () => {
     const date = new Date();
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
-    console.log("MONTH & Year", month, year);
     try {
       const response = await axios.get(
         `/api/a/unpaid-student?month=${month}&year=${year}`,

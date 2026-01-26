@@ -94,7 +94,6 @@ export default function RoomManagement() {
       if (response.data.success) {
         const data = await response.data;
         setRoomsDate(data.rooms);
-        console.log(data);
       } else {
         toast.error("Failed to fetch rooms data.");
       }
@@ -136,11 +135,9 @@ export default function RoomManagement() {
 
     setIsLoading(true);
 
-    console.log("Setting data: ", settingData);
     try {
       const response = await axios.post("/api/a/create-room", settingData);
 
-      console.log("RESPONSE: ", response);
       if (!response.data.success) {
         toast.error(response.data.message);
       } else {

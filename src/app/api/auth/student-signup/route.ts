@@ -13,7 +13,6 @@ export async function POST(request: Request) {
 
   const validating = StudentSignupSchema.safeParse(body);
 
-  console.log("validating", validating);
   if (!validating.success)
     return NextResponse.json(
       {

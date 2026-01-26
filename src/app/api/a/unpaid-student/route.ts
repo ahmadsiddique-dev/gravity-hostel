@@ -25,16 +25,10 @@ export async function GET(request: Request) {
       year: year, 
     }).select("student");
 
-    console.log("Seeleterd: ", existingVouchers);
-
-    console.log(`Found ${existingVouchers.length} existing vouchers for ${month}/${year}`);
-
     const assignedStudentIds = existingVouchers.map((v: any) => {
       const s = v.student;
       return (s?._id || s).toString(); 
     });
-
-    console.log("Assigned IDs to Exclude:", assignedStudentIds);
 
     const unassignedStudents = await StudentModel.find(
       {

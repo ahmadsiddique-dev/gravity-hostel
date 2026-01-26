@@ -15,8 +15,6 @@ export async function GET() {
       .populate("room", "type number")
       .lean();
 
-    console.log("Data: ", response);
-
     const dataToSend = response.map((e: any) => {
       return {
         _id: e._id,

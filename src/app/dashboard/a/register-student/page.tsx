@@ -128,7 +128,6 @@ export default function Page() {
       const res = await axios.post("/api/a/register-student/getrooms", {
         type,
       });
-      console.log("Rooms fetched:", res.data);
       setRooms(res.data.rooms);
       return res.data.rooms as { number: number }[];
     } catch (e) {
@@ -138,7 +137,6 @@ export default function Page() {
   };
 
   const handleSubmit = async (data: z.infer<typeof StudentSignupSchema>) => {
-    // console.log("Submitted data:", data);
     setIsSubmitting(true)
     try {
       const res = await axios.post("/api/auth/student-signup", data);

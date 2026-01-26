@@ -7,7 +7,6 @@ const roomsType = { standard: 3, deluxe: 2, suite: 1 };
 export async function POST(request: Request) {
   const { type } = (await request.json()) as { type: RoomType };
 
-  console.log("Requested room type:", type);
   if (!type)
     return Response.json(
       { success: false, message: "Type is required" },
@@ -33,7 +32,6 @@ export async function POST(request: Request) {
       },
     ]);
 
-    console.log(result);
 
     if (!result.length) {
       return Response.json(

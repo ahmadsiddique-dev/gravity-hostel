@@ -90,8 +90,7 @@ export default function NotificationComposer() {
         toast.error(response.data.message)
       }
       else {
-        setIncommingStudents(response.data.data);
-        // console.log("Data: ", response.data.data);
+        setIncommingStudents(response.data.data)
       }
     } catch (error) {
       toast.error("Something went wrong")

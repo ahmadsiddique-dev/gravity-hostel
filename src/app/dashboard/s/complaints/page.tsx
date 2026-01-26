@@ -65,7 +65,7 @@ export default function MyComplaintsPage() {
         toast.error(response.data.message);
       } else {
         toast.error(response.data.message);
-        // console.log("data:", response.data.data);
+        // ("data:", response.data.data);
         setComplaintList(response.data.data);
       }
     } catch (error) {
@@ -96,14 +96,11 @@ export default function MyComplaintsPage() {
       return;
     }
 
-    console.log("Ya La id:", complaints._id);
-
     try {
       const response = await axios.post("/api/s/complaint", complaints);
       if (!response.data.success) {
         toast.error(response.data.message);
       } else {
-        console.log("Complaint Data:", response.data.data);
         toast.success(response.data.message)
       }
     } catch (error: any) {

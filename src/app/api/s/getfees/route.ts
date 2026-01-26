@@ -18,7 +18,6 @@ export async function POST(request:Request) {
         const studentId = await StudentModel.findOne({user: _id}, {_id: 1})
 
         const stringId = studentId?._id.toString()
-        console.log("StringedID : ", stringId)
         const response = await FeeModel.find({ student: stringId}, { createdAt: 1, dueDate: 1, roomRent: 1, messFee: 1, amount: 1, month: 1, year: 1, status: 1})
 
         if (!response.length) {

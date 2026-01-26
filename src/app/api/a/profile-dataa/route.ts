@@ -20,7 +20,6 @@ export async function POST(request: Request) {
 
     const objectId = new mongoose.Types.ObjectId(_id);
 
-    console.log("Object id: ", objectId)
     const res: any = await StudentModel.find({ _id: objectId }).populate("user").populate("room")
 
     if (!res.length) {

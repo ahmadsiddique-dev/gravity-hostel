@@ -46,13 +46,12 @@ export default function AuthPage() {
 
   async function onSubmit(data: z.infer<typeof RegisterSchema>) {
     setIsLoading(true);
-    console.log("Data : ", data);
     try {
         const response = await axios.post('/api/auth/signup', data);
         if (!response.data.success) {
-          toast.success(response.data.message)
+          toast.error(response.data.message)
         }
-        if (response) console.log("user created successfully");
+        if (response) toast.success("user created successfully");
         router.push("/login")
     } catch (error: any) {
             if (error.response) {

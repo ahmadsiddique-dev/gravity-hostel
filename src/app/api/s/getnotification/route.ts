@@ -6,7 +6,6 @@ import mongoose from "mongoose";
 export async function POST(request: Request) {
   const { _id } = await request.json();
 
-  console.log("ID came:", _id)
   if (!_id) {
     return Response.json(
       { success: false, message: "User Id not found" },
@@ -30,7 +29,6 @@ export async function POST(request: Request) {
 
     const extracted = studentId._id.toString() // studentId.toString() This was challenging now resolved
 
-    console.log("Extracted: ", extracted)
     const response = await NotificationModel.aggregate([
       {
         $match: {
