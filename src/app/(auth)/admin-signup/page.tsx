@@ -30,6 +30,7 @@ import {
 import { Input } from "@/components/ui/input";
 import axios from 'axios'
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -48,10 +49,18 @@ export default function AuthPage() {
     console.log("Data : ", data);
     try {
         const response = await axios.post('/api/auth/signup', data);
+        if (!response.data.success) {
+          toast.success(response.data.message)
+        }
         if (response) console.log("user created successfully");
-        router.push("/dashboard/a")
-    } catch (error) {
-        console.error("Error occured", error)
+        router.push("/login")
+    } catch (error: any) {
+            if (error.response) {
+                toast.error(error.response.data.message)
+            }
+            else {
+                toast.error("something went wrong")
+            }
     }finally {
         setIsLoading(false)
     }    

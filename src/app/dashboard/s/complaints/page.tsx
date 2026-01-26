@@ -7,7 +7,6 @@ import {
   XCircle,
   MessageSquare,
   Calendar,
-  ChevronRight,
   Loader2,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";

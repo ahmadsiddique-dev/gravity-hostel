@@ -44,12 +44,10 @@ export function AuthPage() {
       if (response.data.success) {
         const userData: UserDetails = response.data.data
 
-        console.log("Broom: ", userData)
         if (!userData) {
           throw new Error("User data missing from server response");
         }
-        console.log("User Data Received:", userData);
-
+        
         localStorage.setItem("_id", userData._id);
         localStorage.setItem(
           "data",
@@ -69,8 +67,6 @@ export function AuthPage() {
         toast.error(response.data.message || "Invalid credentials");
       }
     } catch (error: any) {
-      console.error("Login Error:", error);
-
       const errorMessage =
         error.response?.data?.message ||
         "Something went wrong. Please try again.";

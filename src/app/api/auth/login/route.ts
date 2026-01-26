@@ -13,20 +13,28 @@ export async function POST(request: Request) {
   try {
     await dbConnect();
 
-    const user = await UserModel.findOne({ email }, { _id: 1, fullName: 1, email: 1, isAdmin: 1});
+    const user = await UserModel.findOne({ email }, { _id: 1, fullName: 1, email: 1, isAdmin: 1, password: 1});
 
     if (!user)
       return Response.json(
-        { success: false, message: "User already exists please Signup" },
+        { success: false, message: "Invalid Email of Password" },
         { status: 400 },
       );
 
-    
+    if ((password !== user.password)) {
+      return Response.json(
+        { success: false, message: "Invalid Password or Email" },
+        { status: 400 },
+      );
+    }
+
+    user.password = undefined
 
     return Response.json(
       { success: true, message: "Login successfully", data: user },
       { status: 200 },
     );
+
   } catch (error) {
     return Response.json(
       { success: false, message: "Unexpected error occured" },
