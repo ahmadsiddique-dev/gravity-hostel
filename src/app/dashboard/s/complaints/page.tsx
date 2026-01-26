@@ -27,6 +27,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { getId } from "@/hooks/get-id";
 import { formatUtcTime } from "../attendence/page";
+import Loader from "@/helper/Loader";
 
 interface IComplaints {
   title: string;
@@ -64,7 +65,7 @@ export default function MyComplaintsPage() {
         toast.error(response.data.message);
       } else {
         toast.error(response.data.message);
-        console.log("data:", response.data.data);
+        // console.log("data:", response.data.data);
         setComplaintList(response.data.data);
       }
     } catch (error) {
@@ -81,7 +82,14 @@ export default function MyComplaintsPage() {
   const handleSubmit = async () => {
     setIsSubmitting(true);
 
-    setComplaints({ ...complaints, _id: getId() });
+    const id = getId();
+     
+    if (!id) {
+      toast.error('Cannot fetch ID please refresh the page');
+      return;
+    }
+
+    setComplaints({ ...complaints, _id:  id});
 
     if (complaints.title.length < 3 || complaints.description.length < 3) {
       toast.error("Please fill the complaint section properly");
@@ -89,10 +97,6 @@ export default function MyComplaintsPage() {
     }
 
     console.log("Ya La id:", complaints._id);
-    if (!complaints._id) {
-      toast.error("User not cannot found");
-      return;
-    }
 
     try {
       const response = await axios.post("/api/s/complaint", complaints);
@@ -100,9 +104,10 @@ export default function MyComplaintsPage() {
         toast.error(response.data.message);
       } else {
         console.log("Complaint Data:", response.data.data);
+        toast.success(response.data.message)
       }
-    } catch (error) {
-      toast.error("Unexpecter Error Occured");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Unexpecter Error Occured"); 
     } finally {
       setIsSubmitting(false);
     }
@@ -173,9 +178,10 @@ export default function MyComplaintsPage() {
               </div>
               <Button
                 onClick={handleSubmit}
+                disabled={isSubmitting}
                 className="w-full bg-white text-black hover:bg-slate-200 font-bold h-11"
               >
-                Submit Complaint
+                <Loader isLoading={isSubmitting} className="animate-spin" text="Submit Complaint" />
               </Button>
             </DialogContent>
           </Dialog>

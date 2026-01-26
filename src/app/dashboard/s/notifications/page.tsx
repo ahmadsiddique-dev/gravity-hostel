@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Bell, MoreHorizontal, CheckCheck, Calendar } from "lucide-react";
+import { Bell, MoreHorizontal, Calendar } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
@@ -29,7 +29,6 @@ export default function NotificationPage() {
       if (!response.data.success) {
         toast.error(response.data.message);
       } else {
-        console.log("Notification Response: ", response.data.data);
         setNotificationList(response.data.data);
       }
     } catch (error) {
@@ -58,14 +57,6 @@ export default function NotificationPage() {
               </p>
             </div>
           </div>
-          {/* <Button
-            variant="outline"
-            size="sm"
-            className="gap-2 h-9 w-full sm:w-auto"
-          >
-            <CheckCheck className="h-4 w-4" />
-            Mark all as read
-          </Button> */}
         </div>
       </div>
       <div className="bg-card border border-border rounded-2xl shadow-sm overflow-hidden">
