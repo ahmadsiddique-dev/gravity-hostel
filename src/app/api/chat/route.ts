@@ -6,7 +6,7 @@ export async function POST(request:Request) {
     const { messages }: {messages: UIMessage[]} = await request.json();
 
     const response = streamText({
-        model: google("gemini-2.5-flash"),
+        model: google("gemini-2.5-flash-lite"),
         messages: await convertToModelMessages(messages),
         system: student_ai_instructions
     })

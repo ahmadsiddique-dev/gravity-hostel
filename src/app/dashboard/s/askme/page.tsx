@@ -78,7 +78,6 @@ export default function ChatInterface() {
                   <span className="text-xs font-bold uppercase tracking-wider">Saify</span>
                 </div>
               )}
-
               <div className="prose prose-sm dark:prose-invert max-w-none wrap-break-word leading-relaxed">
                 {m.parts.map((part, i) => (
                   <React.Fragment key={i}>
@@ -163,3 +162,6 @@ export default function ChatInterface() {
     </div>
   );
 }
+
+
+// or issu could be here in this frontend that way we are handling it 
