@@ -18,7 +18,7 @@ export async function POST(req: Request) {
   console.log("Data DOta: ", messages);
 
   const result = streamText({
-    model: google("gemini-2.5-flash"),
+    model: google("gemini-2.5-flash-lite"),
     messages: await (convertToModelMessages(messages)),
     system: `
     If you are asked to give data then query based on the given Id in prompt.
