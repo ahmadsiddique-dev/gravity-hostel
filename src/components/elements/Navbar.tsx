@@ -10,6 +10,7 @@ import {
   MobileNavToggle,
   MobileNavMenu,
 } from "@/components/ui/resizable-navbar";
+import { IconMessageChatbot } from "@tabler/icons-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -40,11 +41,10 @@ export function NavbarItem() {
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
             <NavbarButton variant="secondary">Login</NavbarButton>
-            <NavbarButton href="/admin-signup" variant="primary">Admin Signup</NavbarButton>
+            <NavbarButton className="flex justify-around gap-1.5 items-center" href="/askme" variant="primary"><span>Ask</span><span><IconMessageChatbot /></span></NavbarButton>
           </div>
         </NavBody>
- 
-        {/* Mobile Navigation */}
+
         <MobileNav>
           <MobileNavHeader>
             <NavbarLogo />
@@ -68,21 +68,21 @@ export function NavbarItem() {
                 <span className="block">{item.name}</span>
               </Link>
             ))}
-            <div className="flex w-full flex-col gap-4">
+            <div className="flex w-full justify-center flex-col gap-4">
               <NavbarButton
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
                 className="w-full"
               >
-                Login
+                Loging
               </NavbarButton>
               <NavbarButton
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
-                className="w-full"
-                href="/admin-signup"
+                className="w-full flex justify-center items-center gap-2"
+                href="/askme"
               >
-                Admin Signup
+               <span>Ask</span><IconMessageChatbot/>
               </NavbarButton>
             </div>
           </MobileNavMenu>

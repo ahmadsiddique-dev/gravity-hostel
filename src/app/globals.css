@@ -1,7 +1,21 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@plugin "../../node_modules/@tailwindcss/typography";
+
+/* 1. THE SCROLLBAR KILLER (Global v4) */
+@layer base {
+  * {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  *::-webkit-scrollbar {
+    display: none !important;
+  }
+}
+
 @theme inline {
+  --color-saify-blue: #2563eb;
   --animate-spotlight: spotlight 2s ease 0.75s 1 forwards;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
