@@ -30,6 +30,7 @@ import { Button } from "./ui/button";
 import axios from "axios";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { redirect, useRouter } from "next/navigation";
 
 const data = {
   user: {
@@ -199,6 +200,7 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [nav, setNav] = React.useState<any>([]);
+  const router = useRouter();
   const [render, setRender] = React.useState(false)
   const handleLogout = async () => {
     setIsLoading(true);
@@ -209,6 +211,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         toast.error(response.data.message);
       } else {
         toast.success(response.data.message);
+        router.push("/login")
       }
     } catch (error: any) {
       toast.error(error.response.data.message || "Something went wrong");

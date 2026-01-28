@@ -1,15 +1,15 @@
-import { streamText, UIMessage, convertToModelMessages } from 'ai';
 import { google } from "@ai-sdk/google";
-import { public_ai_instruction } from '@/data/instructions.json'
+import { convertToModelMessages, streamText, UIMessage } from "ai";
+import { student_ai_instructions } from '@/data/instructions.json'
 
-export async function POST(req: Request) {
-  const { messages }: { messages: UIMessage[] } = await req.json();
+export async function POST(request:Request) {
+    const { messages }: {messages: UIMessage[]} = await request.json();
 
-  const result = streamText({
-    model: google("gemini-2.5-flash"),
-    messages: await convertToModelMessages(messages),
-    system: public_ai_instruction,
-  });
+    const response = streamText({
+        model: google("gemini-2.5-flash"),
+        messages: await convertToModelMessages(messages),
+        system: student_ai_instructions
+    })
 
-  return result.toUIMessageStreamResponse();
+    return response.toUIMessageStreamResponse();
 }
