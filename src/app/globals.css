@@ -14,6 +14,10 @@
   }
 }
 
+ .o {
+  color: red;
+ }
+
 @theme inline {
   --color-saify-blue: #2563eb;
   --animate-spotlight: spotlight 2s ease 0.75s 1 forwards;
