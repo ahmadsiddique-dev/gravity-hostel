@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
 
     if (!user)
       return Response.json(
-        { success: false, message: "Invalid Email of Password" },
+        { success: false, message: "Invalid Email or Password" },
         { status: 400 },
       );
 

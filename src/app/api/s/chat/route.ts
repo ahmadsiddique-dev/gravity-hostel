@@ -6,7 +6,7 @@ import {
   tool,
 } from "ai";
 import { google } from "@ai-sdk/google";
-import { public_ai_instruction } from "@/data/instructions.json";
+import { student_ai_instructions } from "@/data/instructions.json";
 import z from "zod";
 import { executionHandler } from "@/lib/execution-handler";
 
