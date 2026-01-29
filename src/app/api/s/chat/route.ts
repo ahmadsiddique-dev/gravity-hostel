@@ -11,10 +11,10 @@ import z from "zod";
 import { executionHandler } from "@/lib/execution-handler";
 
 export async function POST(req: Request) {
-  const { messages }: { messages: UIMessage[] } = await req.json();
+  const { messages, model } = await req.json();
 
   const result = streamText({
-    model: google("gemini-2.5-flash-lite"),
+    model: google( model || "gemini-3-flash-preview"),
     messages: await convertToModelMessages(messages),
     system:`
         You are a hostel assistant.
@@ -34,17 +34,23 @@ export async function POST(req: Request) {
           return { temperature: 72, conditions: "sunny", location: location };
         },
       }),
-      getRoom: tool({
-        description: "Get the room details of the student",
+      getInformation: tool({
+        description: "Get information related to student 'room', 'complaint', 'fee', 'notification' and student own information",
         inputSchema: z.object({
           id: z.string().describe("Id of student to get the data of room."),
           qfor: z
-            .string()
-            .describe(
-              "pass 'room' if student question is related to room data",
+            .enum(['room', 'notification', 'complaint', 'fee', 'attendance', 'user'])
+            .describe(`
+              pass 'user' when you are asked for actuall user data,
+              pass 'room' if student question is related to room data,
+              pass 'notification' if asked for notification related information,
+              pass 'complaint' if asked for complaint related information,
+              pass 'fee' if need fee related information,
+              pass 'attendance' if need attendance related data
+              `,
             ),
         }),
-        execute: async ({ id, qfor }) => await executionHandler({ id, qfor }), // issue could be here
+        execute: async ({ id, qfor }) => await executionHandler({ id, qfor }),
       }),
     },
   });
