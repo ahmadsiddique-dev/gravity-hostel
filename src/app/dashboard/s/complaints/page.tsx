@@ -83,13 +83,13 @@ export default function MyComplaintsPage() {
     setIsSubmitting(true);
 
     const id = getId();
-     
+
     if (!id) {
       toast.error('Cannot fetch ID please refresh the page');
       return;
     }
 
-    setComplaints({ ...complaints, _id:  id});
+    setComplaints({ ...complaints, _id: id });
 
     if (complaints.title.length < 3 || complaints.description.length < 3) {
       toast.error("Please fill the complaint section properly");
@@ -104,7 +104,7 @@ export default function MyComplaintsPage() {
         toast.success(response.data.message)
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Unexpecter Error Occured"); 
+      toast.error(error.response?.data?.message || "Unexpecter Error Occured");
     } finally {
       setIsSubmitting(false);
     }
@@ -184,17 +184,17 @@ export default function MyComplaintsPage() {
           </Dialog>
         </div>
       </div>
-                    {/* {} */}
+      {/* {} */}
       <div className="flex-1 flex flex-co bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
-        <ScrollArea className="flex-1 h-[70vh] w-full">
-        {isLoading ? (
-          <>
-            <div className="flex w-full justify-center items-center">
-              <Loader2 className="animate-spin h-14 w-14" />
-            </div>
-          </>
-        ) : (
-          <>
+        <ScrollArea className="flex-1 max-h-[70vh] w-full">
+          {isLoading ? (
+            <>
+              <div className="flex w-full justify-center items-center">
+                <Loader2 className="animate-spin h-14 w-14" />
+              </div>
+            </>
+          ) : (
+            <>
               <div className="divide-y divide-border">
                 {complaintList.map((item) => (
                   <div
@@ -225,8 +225,8 @@ export default function MyComplaintsPage() {
                   </div>
                 ))}
               </div>
-          </>
-        )}
+            </>
+          )}
         </ScrollArea>
       </div>
     </div>

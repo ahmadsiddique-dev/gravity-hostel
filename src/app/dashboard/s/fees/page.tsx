@@ -34,7 +34,7 @@ export interface IFeeVoucher {
   createdAt: string;
   month: number;
   year: number;
-  status: string; 
+  status: string;
 }
 
 const months = [
@@ -127,7 +127,7 @@ export default function ResponsiveFinancialDashboard() {
       <Card className="bg-card border-border rounded-2xl overflow-hidden shadow-sm">
         <ScrollArea className="w-full">
           <div className="min-w-150">
-            <ScrollArea className="h-[45vh] w-full">
+            <ScrollArea className="max-h-[50vh] w-full">
               {loading ? (
                 <div className="flex h-full items-center justify-center p-10">
                   <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />

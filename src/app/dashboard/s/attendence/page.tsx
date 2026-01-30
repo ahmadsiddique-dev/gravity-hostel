@@ -21,17 +21,17 @@ interface IAttendace {
   updatedAt: string;
 }
 
-  export const formatUtcTime = (isoString: string): string => {
-    if (!isoString) return "00:00:00";
+export const formatUtcTime = (isoString: string): string => {
+  if (!isoString) return "00:00:00";
 
-    const date = new Date(isoString);
+  const date = new Date(isoString);
 
-    const hours = date.getUTCHours().toString().padStart(2, "0");
-    const minutes = date.getUTCMinutes().toString().padStart(2, "0");
-    const seconds = date.getUTCSeconds().toString().padStart(2, "0");
+  const hours = date.getUTCHours().toString().padStart(2, "0");
+  const minutes = date.getUTCMinutes().toString().padStart(2, "0");
+  const seconds = date.getUTCSeconds().toString().padStart(2, "0");
 
-    return `${hours}:${minutes}:${seconds}`;
-  };
+  return `${hours}:${minutes}:${seconds}`;
+};
 
 export default function AttendanceHistory() {
   const [data, setData] = useState<IAttendace[]>([]);
@@ -81,7 +81,7 @@ export default function AttendanceHistory() {
           </div>
         </div>
         <div className="px-6">
-          <ScrollArea className="flex-1 h-[70vh] w-full">
+          <ScrollArea className="flex-1 max-h-[70vh] w-full">
             {isLoading ? (
               <>
                 <Loader2 className="animate-spin w-full text-5xl flex justify-center items-centerr" />
@@ -133,10 +133,9 @@ function StatusBadge({ status }: { status: string }) {
       variant="outline"
       className={`
         px-4 py-1.5 text-xs font-bold gap-2 rounded-full border-2
-        ${
-          isPresent
-            ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-            : "bg-rose-500/10 text-rose-500 border-rose-500/20"
+        ${isPresent
+          ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+          : "bg-rose-500/10 text-rose-500 border-rose-500/20"
         }
       `}
     >

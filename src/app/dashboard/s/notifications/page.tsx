@@ -9,11 +9,11 @@ import { toast } from "sonner";
 import { formatUtcTime } from "../attendence/page";
 
 interface NotificationItem {
-  _id: string;      
+  _id: string;
   title: string;
   message: string;
-  createdAt: string;     
-  isNew?: boolean;   
+  createdAt: string;
+  isNew?: boolean;
 }
 
 export default function NotificationPage() {
@@ -60,23 +60,21 @@ export default function NotificationPage() {
         </div>
       </div>
       <div className="bg-card border border-border rounded-2xl shadow-sm overflow-hidden">
-        <ScrollArea className="h-[70vh] w-full">
+        <ScrollArea className="max-h-[70vh] w-full">
           <div className="divide-y divide-border">
             {notificationList.map((notif, index) => (
               <div
                 key={`${notif._id}-${index}`}
-                className={`group flex items-start gap-4 p-5 transition-colors hover:bg-secondary/20 cursor-pointer ${
-                  notif.isNew ? "bg-primary/2" : ""
-                }`}
+                className={`group flex items-start gap-4 p-5 transition-colors hover:bg-secondary/20 cursor-pointer ${notif.isNew ? "bg-primary/2" : ""
+                  }`}
               >
                 <div className="flex-1 space-y-1">
                   <div className="flex items-center justify-between gap-4">
                     <h3
-                      className={`text-sm font-semibold tracking-tight ${
-                        notif.isNew
+                      className={`text-sm font-semibold tracking-tight ${notif.isNew
                           ? "text-foreground"
                           : "text-muted-foreground"
-                      }`}
+                        }`}
                     >
                       {notif.title}
                     </h3>

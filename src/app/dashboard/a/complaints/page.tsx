@@ -89,7 +89,7 @@ export default function ComplaintsManagement() {
       </div>
 
       <div className="">
-        <ScrollArea className="flex-1 flex flex-col space-y-4 pb-8 gap-2.5 h-[78vh] pr-4">
+        <ScrollArea className="flex-1 flex flex-col space-y-4 pb-8 gap-2.5 max-h-[78vh] pr-4">
           {loading ? (
             <div className="space-y-3">
               {[1, 2, 3, 4, 5].map((i) => (
