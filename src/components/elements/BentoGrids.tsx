@@ -17,7 +17,7 @@ const BentoGrids = () => {
     <section id="features" className="relative py-24 lg:py-32 px-6 overflow-x-hidden bg-background">
       {/* Ambient background glow */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px]" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-200 bg-primary/5 rounded-full blur-[120px]" />
       </div>
 
       <div className="mx-auto max-w-7xl relative z-10">
@@ -26,7 +26,7 @@ const BentoGrids = () => {
           <p className="text-sm font-medium text-primary uppercase tracking-wider mb-3">Platform Capabilities</p>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground tracking-tight">
             Everything You Need.
-            <span className="block text-muted-foreground mt-2">Nothing You Don't.</span>
+            <span className="block text-muted-foreground mt-2">Leave On Us</span>
           </h2>
           <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             A comprehensive suite of tools designed for modern hostel operations.
@@ -40,7 +40,7 @@ const BentoGrids = () => {
           {/* Large featured card - Intelligent Room Management */}
           <div className="md:col-span-2 lg:col-span-4 lg:row-span-2 group relative bg-card border border-border rounded-3xl p-8 lg:p-10 overflow-hidden hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500">
             {/* Gradient accent */}
-            <div className="absolute top-0 right-0 w-72 h-72 bg-gradient-to-bl from-indigo-500/20 via-purple-500/10 to-transparent rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute top-0 right-0 w-72 h-72 bg-linear-to-bl from-indigo-500/20 via-purple-500/10 to-transparent rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
             <div className="relative z-10">
               <div className="flex items-start justify-between mb-6">
@@ -64,7 +64,7 @@ const BentoGrids = () => {
                   "Instant Assignment",
                   "Real-time Vacancy Tracking",
                 ].map((feature, i) => (
-                  <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 border border-border">
+                  <div key={i} className="flex flex-col sm:flex-row items-center gap-3 p-3 rounded-xl bg-muted/50 border border-border">
                     <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
                     <span className="text-foreground text-sm font-medium">{feature}</span>
                   </div>
@@ -129,7 +129,7 @@ const BentoGrids = () => {
                 {[60, 80, 65, 90, 75, 95, 85, 92].map((h, i) => (
                   <div
                     key={i}
-                    className="w-3 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-sm transition-all hover:from-blue-500 hover:to-blue-300"
+                    className="w-3 bg-linear-to-t from-blue-600 to-blue-400 rounded-t-sm transition-all hover:from-blue-500 hover:to-blue-300"
                     style={{ height: `${h}%` }}
                   />
                 ))}

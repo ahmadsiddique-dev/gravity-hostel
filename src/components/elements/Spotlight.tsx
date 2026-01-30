@@ -10,15 +10,15 @@ export function SpotlightPreview() {
     <div className="relative flex min-h-[90vh] w-full overflow-hidden bg-background antialiased">
       {/* Gradient Mesh Background */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-primary/20 via-primary/5 to-transparent rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-tr from-blue-500/10 via-purple-500/5 to-transparent rounded-full blur-3xl" />
+        <div className="absolute top-0 right-0 w-150 h-150 bg-linear-to-bl from-primary/20 via-primary/5 to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-100 h-100 bg-linear-to-tr from-blue-500/10 via-purple-500/5 to-transparent rounded-full blur-3xl" />
       </div>
 
       {/* Grid Pattern */}
       <div
         className={cn(
-          "pointer-events-none absolute inset-0 [background-size:60px_60px] select-none opacity-[0.03]",
-          "[background-image:linear-gradient(to_right,currentColor_1px,transparent_1px),linear-gradient(to_bottom,currentColor_1px,transparent_1px)]",
+          "pointer-events-none absolute inset-0 bg-size-[60px_60px] select-none opacity-[0.03]",
+          "bg-[linear-gradient(to_right,currentColor_1px,transparent_1px),linear-gradient(to_bottom,currentColor_1px,transparent_1px)]",
         )}
       />
 
@@ -34,13 +34,13 @@ export function SpotlightPreview() {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
           </span>
-          Trusted by 500+ Students Across Pakistan
+          <p className="text-[11px]">Trusted by 500+ Students Across Pakistan</p>
         </div>
 
         {/* Main Heading */}
         <h1 className="text-center text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
           <span className="block">Next-Generation</span>
-          <span className="block mt-2 bg-gradient-to-r from-primary via-blue-500 to-purple-600 bg-clip-text text-transparent">
+          <span className="block mt-2 bg-linear-to-r from-primary via-blue-500 to-purple-600 bg-clip-text text-transparent">
             Hostel Management
           </span>
         </h1>
@@ -55,15 +55,9 @@ export function SpotlightPreview() {
         {/* CTA Buttons */}
         <div className="mt-10 flex flex-col sm:flex-row gap-4 items-center justify-center">
           <Button asChild size="lg" className="h-12 px-8 text-base font-medium rounded-full shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all">
-            <Link href="/login">
-              Get Started Free
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-          <Button asChild variant="outline" size="lg" className="h-12 px-8 text-base font-medium rounded-full border-border hover:bg-muted/50 transition-all">
             <Link href="/home/contact">
-              <Play className="mr-2 h-4 w-4" />
-              Schedule Demo
+              Get Enroll Now
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </div>
@@ -72,10 +66,10 @@ export function SpotlightPreview() {
         <div className="mt-16 flex flex-col items-center">
           <p className="text-xs text-muted-foreground uppercase tracking-wider mb-4">Powered by Industry Leaders</p>
           <div className="flex items-center gap-8 opacity-50">
-            <div className="text-xl font-bold text-muted-foreground">MongoDB</div>
-            <div className="text-xl font-bold text-muted-foreground">Next.js</div>
-            <div className="text-xl font-bold text-muted-foreground">Vercel</div>
-            <div className="text-xl font-bold text-muted-foreground hidden sm:block">OpenAI</div>
+            <div className="text-xl font-bold text-muted-foreground">Himalaya</div>
+            <div className="text-xl font-bold text-muted-foreground ">Khayaban</div>
+            <div className="text-xl font-bold text-muted-foreground">Canari</div>
+            <div className="text-xl font-bold text-muted-foreground hidden sm:block">Subhan</div>
           </div>
         </div>
       </div>

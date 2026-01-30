@@ -132,10 +132,10 @@ const Footer = () => {
       <div className="border-t border-border">
         <div className="container mx-auto px-6 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-[11px] text-muted-foreground">
               © {currentYear} Gravity Hostel Management. All rights reserved.
             </p>
-            <div className="flex items-center gap-6">
+            {/* <div className="flex items-center gap-6">
               {footerLinks.legal.map((link, i) => (
                 <Link
                   key={i}
@@ -145,7 +145,7 @@ const Footer = () => {
                   {link.name}
                 </Link>
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

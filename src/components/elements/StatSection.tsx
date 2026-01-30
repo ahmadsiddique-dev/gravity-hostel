@@ -12,7 +12,7 @@ const StatSection = () => {
   return (
     <section className="py-24 relative bg-muted/30">
       {/* Subtle top border gradient */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-border to-transparent" />
 
       <div className="container mx-auto px-6">
         <div className="text-center mb-12">
@@ -28,7 +28,7 @@ const StatSection = () => {
             >
               <div className="text-center">
                 <div className="text-4xl md:text-5xl font-bold mb-2">
-                  <span className="bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                  <span className="bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
                     {stat.number}
                   </span>
                   <span className="text-primary">{stat.suffix}</span>
@@ -38,14 +38,14 @@ const StatSection = () => {
               </div>
 
               {/* Decorative corner accent */}
-              <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-primary/10 to-transparent rounded-tr-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute top-0 right-0 w-16 h-16 bg-linear-to-bl from-primary/10 to-transparent rounded-tr-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
           ))}
         </div>
       </div>
 
       {/* Subtle bottom border gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-border to-transparent" />
     </section>
   );
 };

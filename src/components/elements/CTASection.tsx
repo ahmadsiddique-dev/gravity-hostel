@@ -38,20 +38,24 @@ const CTASection = () => {
               <div className="flex flex-wrap justify-center gap-4 mb-10 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-green-500" />
-                  <span>Free 14-day trial</span>
+                  <span>Be first to get into</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-green-500" />
-                  <span>No credit card required</span>
+                  <span>No Advance payment required</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-green-500" />
-                  <span>Cancel anytime</span>
+                  <span>Leave anytime</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500" />
+                  <span>No Security fee required</span>
                 </div>
               </div>
 
               {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              {/* <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button asChild size="lg" className="h-12 px-8 text-base font-medium rounded-full shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all">
                   <Link href="/login">
                     Start Free Trial
@@ -63,7 +67,7 @@ const CTASection = () => {
                     Talk to Sales
                   </Link>
                 </Button>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
