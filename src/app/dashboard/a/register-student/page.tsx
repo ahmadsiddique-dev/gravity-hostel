@@ -155,34 +155,44 @@ export default function Page() {
     }
   };
   return (
-    <div className="px-4 py-6">
+    <div className="min-h-[calc(100vh-80px)] flex items-center justify-center p-4 md:p-8">
       <form
         onSubmit={form.handleSubmit(handleSubmit, (errors) =>
           console.log("VALIDATION FAILED:", errors),
         )}
-        className="max-w-2xl mx-auto flex flex-col gap-4"
+        className="w-full max-w-lg space-y-6"
       >
-        <h2 className="text-2xl font-semibold text-center">Register Student</h2>
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
+            Register Student
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Step {stepper.currentStep} of 3 — {stepper.currentStep === 1 ? "Personal Details" : stepper.currentStep === 2 ? "Guardian Info" : "Room & Password"}
+          </p>
+        </div>
 
-        <Card className="p-5 shadow-sm">
+        {/* Progress */}
+        <Progress className="h-2 rounded-full" value={stepper.progressValue} />
+
+        {/* Form Card */}
+        <Card className="p-6 bg-card/50 backdrop-blur-sm border-border/50 shadow-lg">
           {stepper.currentStep === 1 && (
-            <div className="grid gap-3">
+            <div className="space-y-4">
               <FormField
                 name="studentDetail.studentName"
-                label="Name"
+                label="Full Name"
                 control={form.control}
                 placeholder="e.g. Ali Khan"
               />
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField
                   name="studentDetail.studentcnic"
                   label="CNIC"
                   control={form.control}
                   placeholder="32301-1122333-9"
                   formatter={(value: string) => {
-                    // Remove all non-digits
                     const raw = value.replace(/\D/g, "");
-                    // Format as XXXXX-XXXXXXX-X
                     let formatted = raw;
                     if (raw.length > 5) {
                       formatted = raw.slice(0, 5) + "-" + raw.slice(5);
@@ -190,7 +200,7 @@ export default function Page() {
                     if (raw.length > 12) {
                       formatted = formatted.slice(0, 13) + "-" + formatted.slice(13);
                     }
-                    return formatted.slice(0, 15); // Max 15 chars: 13 digits + 2 dashes
+                    return formatted.slice(0, 15);
                   }}
                 />
                 <FormField
@@ -199,14 +209,12 @@ export default function Page() {
                   control={form.control}
                   placeholder="0322 4343333"
                   formatter={(value: string) => {
-                    // Remove all non-digits
                     const raw = value.replace(/\D/g, "");
-                    // Format as XXXX XXXXXXX (11 digits with space after 4th)
                     let formatted = raw;
                     if (raw.length > 4) {
                       formatted = raw.slice(0, 4) + " " + raw.slice(4);
                     }
-                    return formatted.slice(0, 12); // Max 12 chars: 11 digits + 1 space
+                    return formatted.slice(0, 12);
                   }}
                 />
               </div>
@@ -218,7 +226,6 @@ export default function Page() {
                 suffix=".com"
                 placeholder="e.g ali@gmail"
                 formatter={(value: string) => {
-                  // Remove .com if user types it (we auto-append it on submit)
                   return value.replace(/\.com$/i, "");
                 }}
               />
@@ -226,7 +233,7 @@ export default function Page() {
           )}
 
           {stepper.currentStep === 2 && (
-            <div className="grid gap-3">
+            <div className="space-y-4">
               <FormField
                 name="guardianDetail.guardianName"
                 label="Guardian Name"
@@ -257,9 +264,9 @@ export default function Page() {
           )}
 
           {stepper.currentStep === 3 && (
-            <div className="grid gap-2">
-              <div className="flex w-full gap-3 items-center">
-                <div className="flex flex-col gap-1.5">
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
                   <Label>Room Type</Label>
                   <Controller
                     name="loginCredientials.type"
@@ -282,7 +289,7 @@ export default function Page() {
                   />
                 </div>
 
-                <div className="grid gap-3">
+                <div className="space-y-2">
                   <Label>Room Number</Label>
                   <Controller
                     name="loginCredientials.roomNumber"
@@ -328,45 +335,46 @@ export default function Page() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField
                   name="loginCredientials.password"
                   label="Password"
                   type="password"
                   control={form.control}
+                  placeholder="••••••••"
                 />
                 <FormField
                   name="confirmPassword"
-                  label="Confirm"
+                  label="Confirm Password"
                   type="password"
                   control={form.control}
+                  placeholder="••••••••"
                 />
               </div>
             </div>
           )}
         </Card>
 
-        <div className="space-y-3">
-          <Progress className="h-1.5" value={stepper.progressValue} />
-          <div className="flex justify-between">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handlePrevious}
-              disabled={stepper.currentStep === 1}
-            >
-              <ArrowLeftIcon className="mr-2 h-4 w-4" /> Back
+        {/* Navigation */}
+        <div className="flex justify-between gap-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handlePrevious}
+            disabled={stepper.currentStep === 1}
+            className="flex-1 sm:flex-none"
+          >
+            <ArrowLeftIcon className="mr-2 h-4 w-4" /> Back
+          </Button>
+          {stepper.currentStep < 3 ? (
+            <Button type="button" key={'next-button'} onClick={handleNext} className="flex-1 sm:flex-none">
+              Next <ArrowRightIcon className="ml-2 h-4 w-4" />
             </Button>
-            {stepper.currentStep < 3 ? (
-              <Button type="button" key={'next-button'} onClick={handleNext}>
-                Next <ArrowRightIcon className="ml-2 h-4 w-4" />
-              </Button>
-            ) : (
-              <Button key={'submit-button'} type="submit">
-                {isSubmitting ? <><Loader2 className="animate-spin" /><span>Submit</span></> : "Submit"}
-              </Button>
-            )}
-          </div>
+          ) : (
+            <Button key={'submit-button'} type="submit" disabled={isSubmitting} className="flex-1 sm:flex-none">
+              {isSubmitting ? <><Loader2 className="animate-spin mr-2" /><span>Submitting...</span></> : "Submit"}
+            </Button>
+          )}
         </div>
       </form>
     </div>

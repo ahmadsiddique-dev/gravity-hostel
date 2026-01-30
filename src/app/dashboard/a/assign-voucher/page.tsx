@@ -286,12 +286,15 @@ const AssignVoucher = () => {
                   </Select>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Room Rent (Auto)</Label>
-                    <div className="flex items-center h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-muted-foreground">
-                      {singleStudentRent ? `PKR ${singleStudentRent}` : "-"}
-                    </div>
+                    <Input
+                      readOnly
+                      disabled
+                      value={singleStudentRent ? `PKR ${singleStudentRent}` : "-"}
+                      className="bg-muted"
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label>Mess Fee</Label>

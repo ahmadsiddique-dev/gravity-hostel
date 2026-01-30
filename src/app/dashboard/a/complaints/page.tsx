@@ -63,8 +63,8 @@ export default function ComplaintsManagement() {
   });
 
   return (
-    <div className="flex flex-col max-w-6xl mx-auto overflow-hidden">
-      <div className="flex-none pt-1.5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+    <div className="flex flex-col w-full min-h-0 p-4 md:p-6">
+      <div className="flex-none flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Complaints</h1>
           <p className="text-sm text-muted-foreground">
@@ -88,22 +88,24 @@ export default function ComplaintsManagement() {
         </div>
       </div>
 
-      <div className="">
-        <ScrollArea className="flex-1 flex flex-col space-y-4 pb-8 gap-2.5 max-h-[78vh] pr-4">
-          {loading ? (
-            <div className="space-y-3">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div
-                  key={i}
-                  className="w-full h-32 rounded-xl bg-secondary/20 animate-pulse border border-border"
-                />
-              ))}
-            </div>
-          ) : (
-            filteredComplaints.map((complaint) => (
-              <ComplaintCard key={complaint.id} complaint={complaint} />
-            ))
-          )}
+      <div className="flex-1 min-h-0">
+        <ScrollArea className="h-[calc(100vh-200px)] w-full">
+          <div className="space-y-3 pr-2">
+            {loading ? (
+              <div className="space-y-3">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div
+                    key={i}
+                    className="w-full h-32 rounded-xl bg-secondary/20 animate-pulse border border-border"
+                  />
+                ))}
+              </div>
+            ) : (
+              filteredComplaints.map((complaint) => (
+                <ComplaintCard key={complaint.id} complaint={complaint} />
+              ))
+            )}
+          </div>
         </ScrollArea>
       </div>
     </div>
@@ -138,21 +140,23 @@ function ComplaintCard({ complaint }: { complaint: IRecord }) {
   }
 
   return (
-    <Card className="bg-card mb-2.5 border-border hover:border-muted-foreground/20 transition-all overflow-hidden">
+    <Card className="bg-card border-border hover:border-muted-foreground/20 transition-all">
       <CardContent className="p-0">
-        <div className="flex flex-col md:flex-row">
-          <div className="flex-1 p-5 space-y-3">
-            <div className="flex items-start justify-between gap-4">
-              <div className="space-y-1">
-                <h3 className="font-bold text-lg leading-tight">
+        <div className="flex flex-col">
+          {/* Content Section */}
+          <div className="p-4 space-y-2">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0 space-y-1">
+                <h3 className="font-bold text-base leading-tight truncate">
                   {complaint.title}
                 </h3>
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                   <span className="flex items-center gap-1">
-                    <MessageSquare className="h-3 w-3" /> {complaint.number}
+                    <MessageSquare className="h-3 w-3 shrink-0" />
+                    <span className="truncate">{complaint.number}</span>
                   </span>
                   <span className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" />{" "}
+                    <Clock className="h-3 w-3 shrink-0" />
                     {formatUtcTime(complaint.date)}
                   </span>
                 </div>
@@ -165,36 +169,37 @@ function ComplaintCard({ complaint }: { complaint: IRecord }) {
             </p>
           </div>
 
-          <div className="flex-none bg-secondary/20 md:w-48 border-t md:border-t-0 md:border-l border-border p-4 flex md:flex-col justify-center items-center gap-2">
+          {/* Actions Section */}
+          <div className="bg-secondary/20 border-t border-border p-3">
             {status === "PENDING" ? (
-              <>
+              <div className="flex gap-2">
                 <Button
                   size="sm"
                   variant="outline"
                   disabled={loading}
-                  className="w-full gap-2 border-destructive/50 text-destructive hover:bg-destructive/10"
+                  className="flex-1 gap-1.5 border-destructive/50 text-destructive hover:bg-destructive/10 text-xs"
                   onClick={() => handleStatusUpdate("REJECTED")}
                 >
-                  <XCircle className="h-4 w-4" /> Reject
+                  <XCircle className="h-3.5 w-3.5" /> Reject
                 </Button>
                 <Button
                   size="sm"
                   disabled={loading}
-                  className="w-full gap-2 bg-emerald-600 hover:bg-emerald-700"
+                  className="flex-1 gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-xs"
                   onClick={() => handleStatusUpdate("RESOLVED")}
                 >
-                  <CheckCircle2 className="h-4 w-4" /> Resolve
+                  <CheckCircle2 className="h-3.5 w-3.5" /> Resolve
                 </Button>
-              </>
+              </div>
             ) : (
               <Button
                 variant="ghost"
                 size="sm"
                 disabled={loading}
-                className="w-full gap-2 text-muted-foreground hover:text-foreground"
+                className="w-full gap-2 text-muted-foreground hover:text-foreground text-xs"
                 onClick={() => handleStatusUpdate("PENDING")}
               >
-                <RefreshCcw className="h-4 w-4" /> Reopen
+                <RefreshCcw className="h-3.5 w-3.5" /> Reopen
               </Button>
             )}
           </div>
