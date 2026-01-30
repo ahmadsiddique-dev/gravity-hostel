@@ -67,59 +67,49 @@ export default function AttendanceHistory() {
   return (
     <div className="flex flex-col w-full p-4 md:p-8 overflow-hidden bg-background">
       <div className="flex-1 flex flex-col min-h-0 bg-card border border-border rounded-2xl overflow-hidden shadow-md">
-        <div className="w-full border-b border-border bg-secondary/20 backdrop-blur-sm px-6 py-3">
-          <div className="grid grid-cols-3 w-full">
-            <span className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
+        {/* Header */}
+        <div className="w-full border-b border-border bg-secondary/20 backdrop-blur-sm px-4 sm:px-6 py-3">
+          <div className="grid grid-cols-[1fr_auto_auto] sm:grid-cols-3 gap-2 sm:gap-4 w-full">
+            <span className="text-xs sm:text-sm font-bold text-muted-foreground uppercase tracking-wider">
               Date
             </span>
-            <span className="text-sm font-bold text-muted-foreground uppercase tracking-wider text-center">
+            <span className="text-xs sm:text-sm font-bold text-muted-foreground uppercase tracking-wider text-center">
               Status
             </span>
-            <span className="text-sm font-bold text-muted-foreground uppercase tracking-wider text-right">
+            <span className="text-xs sm:text-sm font-bold text-muted-foreground uppercase tracking-wider text-right">
               Time
             </span>
           </div>
         </div>
-        <div className="px-6">
-          <ScrollArea className="flex-1 max-h-[70vh] w-full">
-            {isLoading ? (
-              <div className="flex flex-col items-center justify-center py-16 gap-3">
-                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-                <p className="text-sm text-muted-foreground">Loading attendance...</p>
-              </div>
-            ) : (
-              <>
-                <Table>
-                  <TableBody>
-                    {data.map((record, index) => (
-                      <TableRow
-                        key={index}
-                        className="border-border hover:bg-secondary/10 transition-all group"
-                      >
-                        <TableCell className="py-5 font-semibold text-base sm:text-lg">
-                          {record.date}
-                        </TableCell>
 
-                        <TableCell className="text-center">
-                          <StatusBadge
-                            status={record.status ? "Present" : "Absent"}
-                          />
-                        </TableCell>
-
-                        <TableCell className="text-right">
-                          <div className="inline-flex items-center gap-2 font-mono text-sm bg-secondary/40 px-3 py-1.5 rounded-lg border border-border group-hover:bg-primary/5 group-hover:border-primary/20 transition-colors">
-                            <Clock className="h-3.5 w-3.5 text-muted-foreground" />
-                            {formatUtcTime(record.updatedAt)}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </>
-            )}
-          </ScrollArea>
-        </div>
+        {/* Content */}
+        <ScrollArea className="flex-1 max-h-[70vh] w-full">
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-16 gap-3">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">Loading attendance...</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-border">
+              {data.map((record, index) => (
+                <div
+                  key={index}
+                  className="grid grid-cols-[1fr_auto_auto] sm:grid-cols-3 gap-2 sm:gap-4 items-center px-4 sm:px-6 py-4 hover:bg-secondary/10 transition-all"
+                >
+                  <span className="font-semibold text-sm sm:text-base">
+                    {record.date}
+                  </span>
+                  <div className="flex justify-center">
+                    <StatusBadge status={record.status ? "Present" : "Absent"} />
+                  </div>
+                  <span className="text-right font-mono text-xs sm:text-sm text-muted-foreground whitespace-nowrap">
+                    {formatUtcTime(record.updatedAt)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </ScrollArea>
         <div className="h-8" />
       </div>
     </div>

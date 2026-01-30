@@ -76,15 +76,8 @@ export default function ProfilePage() {
         <Card className="overflow-hidden border-border/50 shadow-xl bg-card/50 backdrop-blur-sm">
           <div className="relative p-8 pb-4">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div>
-                <GradentText
-                  colors={GradientColors}
-                  animationSpeed={8}
-                  showBorder={false}
-                  className="text-4xl md:text-5xl font-bold tracking-tight"
-                >
-                  {data?.name || "Loading..."}
-                </GradentText>
+              <div className="text-2xl font-semibold">
+                {data?.name || "Loading..."}
                 <div className="flex items-center gap-2 mt-2 text-muted-foreground">
                   <GraduationCap className="w-4 h-4" />
                   <span className="text-sm font-medium">
