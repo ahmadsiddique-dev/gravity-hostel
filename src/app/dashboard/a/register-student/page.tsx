@@ -147,10 +147,10 @@ export default function Page() {
       form.reset();
       localStorage.removeItem("student-registration-data");
       setStepper({ currentStep: 1, progressValue: 33 });
-    }catch (e) {
+    } catch (e) {
       toast.error("Failed to register student.");
       return;
-    }finally {
+    } finally {
       setIsSubmitting(false)
     }
   };
@@ -171,17 +171,43 @@ export default function Page() {
                 name="studentDetail.studentName"
                 label="Name"
                 control={form.control}
+                placeholder="e.g. Ali Khan"
               />
               <div className="grid grid-cols-2 gap-3">
                 <FormField
                   name="studentDetail.studentcnic"
                   label="CNIC"
                   control={form.control}
+                  placeholder="32301-1122333-9"
+                  formatter={(value: string) => {
+                    // Remove all non-digits
+                    const raw = value.replace(/\D/g, "");
+                    // Format as XXXXX-XXXXXXX-X
+                    let formatted = raw;
+                    if (raw.length > 5) {
+                      formatted = raw.slice(0, 5) + "-" + raw.slice(5);
+                    }
+                    if (raw.length > 12) {
+                      formatted = formatted.slice(0, 13) + "-" + formatted.slice(13);
+                    }
+                    return formatted.slice(0, 15); // Max 15 chars: 13 digits + 2 dashes
+                  }}
                 />
                 <FormField
                   name="studentDetail.studentPhoneNO"
                   label="Phone"
                   control={form.control}
+                  placeholder="0322 4343333"
+                  formatter={(value: string) => {
+                    // Remove all non-digits
+                    const raw = value.replace(/\D/g, "");
+                    // Format as XXXX XXXXXXX (11 digits with space after 4th)
+                    let formatted = raw;
+                    if (raw.length > 4) {
+                      formatted = raw.slice(0, 4) + " " + raw.slice(4);
+                    }
+                    return formatted.slice(0, 12); // Max 12 chars: 11 digits + 1 space
+                  }}
                 />
               </div>
               <FormField
@@ -189,6 +215,12 @@ export default function Page() {
                 label="Email"
                 type="email"
                 control={form.control}
+                suffix=".com"
+                placeholder="e.g ali@gmail"
+                formatter={(value: string) => {
+                  // Remove .com if user types it (we auto-append it on submit)
+                  return value.replace(/\.com$/i, "");
+                }}
               />
             </div>
           )}
@@ -199,16 +231,27 @@ export default function Page() {
                 name="guardianDetail.guardianName"
                 label="Guardian Name"
                 control={form.control}
+                placeholder="e.g. Ahmad Khan"
               />
               <FormField
                 name="guardianDetail.guardianPhoneNO"
                 label="Guardian Phone"
                 control={form.control}
+                placeholder="0300 1234567"
+                formatter={(value: string) => {
+                  const raw = value.replace(/\D/g, "");
+                  let formatted = raw;
+                  if (raw.length > 4) {
+                    formatted = raw.slice(0, 4) + " " + raw.slice(4);
+                  }
+                  return formatted.slice(0, 12);
+                }}
               />
               <FormField
                 name="guardianDetail.address"
                 label="Address"
                 control={form.control}
+                placeholder="e.g. House 123, Street 4, City"
               />
             </div>
           )}
@@ -320,7 +363,7 @@ export default function Page() {
               </Button>
             ) : (
               <Button key={'submit-button'} type="submit">
-                {isSubmitting ? <><Loader2 className="animate-spin" /><span>Submit</span></>: "Submit"}
+                {isSubmitting ? <><Loader2 className="animate-spin" /><span>Submit</span></> : "Submit"}
               </Button>
             )}
           </div>
@@ -330,7 +373,7 @@ export default function Page() {
   );
 }
 
-function FormField({ name, label, control, type = "text" }: any) {
+function FormField({ name, label, control, type = "text", suffix, placeholder, formatter }: any) {
   return (
     <Controller
       name={name}
@@ -340,11 +383,23 @@ function FormField({ name, label, control, type = "text" }: any) {
           <Label className={fieldState.error ? "text-destructive" : ""}>
             {label}
           </Label>
-          <Input
-            {...field}
-            type={type}
-            className={fieldState.error ? "border-destructive" : ""}
-          />
+          <div className="flex items-center">
+            <Input
+              {...field}
+              type={type}
+              placeholder={placeholder}
+              onChange={(e) => {
+                const value = formatter ? formatter(e.target.value) : e.target.value;
+                field.onChange(value);
+              }}
+              className={`${fieldState.error ? "border-destructive" : ""} ${suffix ? "rounded-r-none border-r-0" : ""}`}
+            />
+            {suffix && (
+              <span className="flex h-9 items-center rounded-r-md border border-l-0 border-input bg-muted px-3 text-sm text-muted-foreground">
+                {suffix}
+              </span>
+            )}
+          </div>
           {fieldState.error && (
             <p className="text-[10px] text-destructive">
               {fieldState.error.message}

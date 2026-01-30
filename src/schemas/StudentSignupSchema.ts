@@ -9,17 +9,34 @@ export const StudentSignupSchema = z
         .max(40, { message: "Student name must be less than 40 characters" }),
       studentcnic: z
         .string()
-        .length(13, { message: "CNIC must be exactly 13 digits." })
-        .regex(/^\d+$/, {
-          message: "CNIC must contain only digits (no special characters).",
+        .transform((val) => val.replace(/\D/g, ""))
+        .refine((val) => val.length === 13, {
+          message: "CNIC must be exactly 13 digits.",
+        })
+        .refine((val) => /^\d+$/.test(val), {
+          message: "CNIC must contain only digits.",
         }),
       studentPhoneNO: z
         .string()
-        .length(11, { message: "Phone number must be exactly 11 digits." })
-        .regex(/^\d+$/, {
+        .transform((val) => val.replace(/\D/g, ""))
+        .refine((val) => val.length === 11, {
+          message: "Phone number must be exactly 11 digits.",
+        })
+        .refine((val) => /^\d+$/.test(val), {
           message: "Phone number must contain only digits.",
         }),
-      studentEmail: z.string().email({ message: "Invalid email address." }),
+      studentEmail: z
+        .string()
+        .transform((val) => {
+          // Auto-append .com if not present
+          if (val && !val.endsWith(".com")) {
+            return val + ".com";
+          }
+          return val;
+        })
+        .refine((val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), {
+          message: "Invalid email address.",
+        }),
     }),
     guardianDetail: z.object({
       guardianName: z
@@ -28,8 +45,11 @@ export const StudentSignupSchema = z
         .max(40, { message: "Guardian name must be less than 40 characters" }),
       guardianPhoneNO: z
         .string()
-        .length(11, { message: "Phone number must be exactly 13 digits." })
-        .regex(/^\d+$/, {
+        .transform((val) => val.replace(/\D/g, ""))
+        .refine((val) => val.length === 11, {
+          message: "Phone number must be exactly 11 digits.",
+        })
+        .refine((val) => /^\d+$/.test(val), {
           message: "Phone number must contain only digits.",
         }),
       address: z

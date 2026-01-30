@@ -12,7 +12,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
@@ -73,73 +72,70 @@ export default function StudentTable() {
             className="pl-10"
           />
         </div>
-        <ScrollArea className="h-[65vh] w-full">
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
+        <div className="h-[65vh] overflow-auto rounded-md border">
+          <Table className="min-w-[600px]">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="font-medium">Name</TableHead>
+                <TableHead className="text-center">Room</TableHead>
+                <TableHead className="text-center">Status</TableHead>
+                <TableHead className="text-right">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {loading ? (
                 <TableRow>
-                  <TableHead className="font-medium">Name</TableHead>
-                  <TableHead className="text-center">Room</TableHead>
-                  <TableHead className="text-center">Status</TableHead>
-                  <TableHead className="text-right">Action</TableHead>
+                  <TableCell colSpan={4} className="text-center py-10">
+                    Loading...
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {loading ? (
-                  <TableRow>
-                    <TableCell colSpan={4} className="text-center py-10">
-                      Loading...
+              ) : filteredStudents.length > 0 ? (
+                filteredStudents.map((student) => (
+                  <TableRow key={student._id}>
+                    <TableCell className="font-semibold py-4">
+                      {student.name}
                     </TableCell>
-                  </TableRow>
-                ) : filteredStudents.length > 0 ? (
-                  filteredStudents.map((student) => (
-                    <TableRow key={student._id}>
-                      <TableCell className="font-semibold py-4">
-                        {student.name}
-                      </TableCell>
 
-                      <TableCell className="text-center">
-                        {student.roomNumber || "Unassigned"}
-                      </TableCell>
+                    <TableCell className="text-center">
+                      {student.roomNumber || "Unassigned"}
+                    </TableCell>
 
-                      <TableCell className="text-center">
-                        <Badge
-                          variant={student.status ? "default" : "secondary"}
-                          className={`border-none px-3 py-1 ${
-                            student.status
-                              ? "bg-green-100 text-green-700"
-                              : "bg-gray-100 text-gray-700"
+                    <TableCell className="text-center">
+                      <Badge
+                        variant={student.status ? "default" : "secondary"}
+                        className={`border-none px-3 py-1 ${student.status
+                          ? "bg-green-100 text-green-700"
+                          : "bg-gray-100 text-gray-700"
                           }`}
-                        >
-                          {student.status ? "Active" : "Inactive"}
-                        </Badge>
-                      </TableCell>
+                      >
+                        {student.status ? "Active" : "Inactive"}
+                      </Badge>
+                    </TableCell>
 
-                      <TableCell className="text-right">
-                        <Button
-                          onClick={() =>
-                            router.push(`/dashboard/a/profile/${student._id}`)
-                          }
-                          variant="ghost"
-                          size="sm"
-                        >
-                          <Eye className="mr-2 h-4 w-4" />
-                          View
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={4} className="text-center py-10">
-                      No students found.
+                    <TableCell className="text-right">
+                      <Button
+                        onClick={() =>
+                          router.push(`/dashboard/a/profile/${student._id}`)
+                        }
+                        variant="ghost"
+                        size="sm"
+                      >
+                        <Eye className="mr-2 h-4 w-4" />
+                        View
+                      </Button>
                     </TableCell>
                   </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </ScrollArea>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center py-10">
+                    No students found.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );
