@@ -94,7 +94,7 @@ const data = {
     {
       title: "Attendence",
       url: "/dashboard/a/attendence",
-      icon: IconCalendarCheck, 
+      icon: IconCalendarCheck,
     },
     {
       title: "Notifications",
