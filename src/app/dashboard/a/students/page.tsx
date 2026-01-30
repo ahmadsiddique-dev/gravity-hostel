@@ -104,8 +104,8 @@ export default function StudentTable() {
                       <Badge
                         variant={student.status ? "default" : "secondary"}
                         className={`border-none px-3 py-1 ${student.status
-                          ? "bg-green-100 text-green-700"
-                          : "bg-gray-100 text-gray-700"
+                          ? "bg-emerald-500/15 text-emerald-500"
+                          : "bg-muted text-muted-foreground"
                           }`}
                       >
                         {student.status ? "Active" : "Inactive"}
