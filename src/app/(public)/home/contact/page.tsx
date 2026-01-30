@@ -17,7 +17,7 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+const phoneRegex = /^\+?[1-9][\d\s]{1,16}$/;
 
 export const formSchema = z.object({
   name: z
@@ -45,7 +45,7 @@ export const formSchema = z.object({
     }),
 });
 
-export const phoneHifen = () => {};
+export const phoneHifen = () => { };
 
 export default function Page() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -142,18 +142,18 @@ export default function Page() {
                 )}
               />
 
-			  <Controller
+              <Controller
                 name="email"
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="contact-form-email">
-						Email
+                      Email
                     </FieldLabel>
                     <Input
                       {...field}
                       id="contact-form-email"
-					  type="email"
+                      type="email"
                       aria-invalid={fieldState.invalid}
                       placeholder="e.g. ali@gmail.com"
                       autoComplete="off"
