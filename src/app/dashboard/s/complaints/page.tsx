@@ -188,11 +188,10 @@ export default function MyComplaintsPage() {
       <div className="flex-1 flex flex-co bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
         <ScrollArea className="flex-1 max-h-[70vh] w-full">
           {isLoading ? (
-            <>
-              <div className="flex w-full justify-center items-center">
-                <Loader2 className="animate-spin h-14 w-14" />
-              </div>
-            </>
+            <div className="flex flex-col items-center justify-center py-16 gap-3">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">Loading complaints...</p>
+            </div>
           ) : (
             <>
               <div className="divide-y divide-border">

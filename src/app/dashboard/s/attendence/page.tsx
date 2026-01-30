@@ -83,9 +83,10 @@ export default function AttendanceHistory() {
         <div className="px-6">
           <ScrollArea className="flex-1 max-h-[70vh] w-full">
             {isLoading ? (
-              <>
-                <Loader2 className="animate-spin w-full text-5xl flex justify-center items-centerr" />
-              </>
+              <div className="flex flex-col items-center justify-center py-16 gap-3">
+                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                <p className="text-sm text-muted-foreground">Loading attendance...</p>
+              </div>
             ) : (
               <>
                 <Table>

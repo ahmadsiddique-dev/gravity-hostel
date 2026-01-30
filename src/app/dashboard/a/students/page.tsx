@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Search, Eye } from "lucide-react";
+import { Search, Eye, Loader2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -85,8 +85,11 @@ export default function StudentTable() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-10">
-                    Loading...
+                  <TableCell colSpan={4} className="py-12">
+                    <div className="flex flex-col items-center justify-center gap-3">
+                      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground">Loading students...</p>
+                    </div>
                   </TableCell>
                 </TableRow>
               ) : filteredStudents.length > 0 ? (

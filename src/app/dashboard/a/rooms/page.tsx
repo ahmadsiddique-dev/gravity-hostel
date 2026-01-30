@@ -87,15 +87,23 @@ export default function RoomManagement() {
   const [changed, setChanged] = React.useState(false);
   const [error, setError] = useState(false);
   const [loading, setIsLoading] = useState(false);
+  const [isLoadingRooms, setIsLoadingRooms] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get<RoomsApiResponse>("/api/a/data/rooms");
-      if (response.data.success) {
-        const data = await response.data;
-        setRoomsDate(data.rooms);
-      } else {
+      setIsLoadingRooms(true);
+      try {
+        const response = await axios.get<RoomsApiResponse>("/api/a/data/rooms");
+        if (response.data.success) {
+          const data = await response.data;
+          setRoomsDate(data.rooms);
+        } else {
+          toast.error("Failed to fetch rooms data.");
+        }
+      } catch (error) {
         toast.error("Failed to fetch rooms data.");
+      } finally {
+        setIsLoadingRooms(false);
       }
     };
 
@@ -271,11 +279,22 @@ export default function RoomManagement() {
       </div>
 
       <ScrollArea className="max-h-[70vh] w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {roomsData.map((room) => (
-            <RoomCard key={room.id} room={room} />
-          ))}
-        </div>
+        {isLoadingRooms ? (
+          <div className="flex flex-col items-center justify-center py-16 gap-3">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">Loading rooms...</p>
+          </div>
+        ) : roomsData.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {roomsData.map((room) => (
+              <RoomCard key={room.id} room={room} />
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-16 gap-2">
+            <p className="text-sm text-muted-foreground">No rooms found</p>
+          </div>
+        )}
       </ScrollArea>
     </div>
   );
