@@ -5,20 +5,26 @@ import { motion } from "framer-motion"
 
 export function ThinkingLoader() {
   return (
-    <div className="flex items-center gap-3 py-4">
-      <motion.div
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.5, 1, 0.5],
-        }}
-        transition={{
-          duration: 1.5,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-        className="h-5 w-5 rounded-full bg-linear-to-tr from-blue-500 to-purple-500 blur-[2px]"
-      />
-      <span className="text-sm font-medium text-muted-foreground animate-pulse">
+    <div className="flex items-center gap-2 py-1">
+      <div className="flex items-center gap-1">
+        {[0, 1, 2].map((i) => (
+          <motion.div
+            key={i}
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.4, 1, 0.4],
+            }}
+            transition={{
+              duration: 1,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 0.15,
+            }}
+            className="h-2 w-2 rounded-full bg-primary"
+          />
+        ))}
+      </div>
+      <span className="text-sm text-muted-foreground">
         Thinking...
       </span>
     </div>

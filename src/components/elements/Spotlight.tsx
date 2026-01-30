@@ -1,31 +1,83 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Spotlight } from "../ui/spotlight";
+import { Button } from "../ui/button";
+import { ArrowRight, Play } from "lucide-react";
+import Link from "next/link";
 
 export function SpotlightPreview() {
   return (
-    <div className="relative mask-b-from-50% flex h-[40rem] w-full overflow-hidden rounded-md bg-black/[0.96] antialiased md:items-center md:justify-center">
+    <div className="relative flex min-h-[90vh] w-full overflow-hidden bg-background antialiased">
+      {/* Gradient Mesh Background */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-primary/20 via-primary/5 to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-tr from-blue-500/10 via-purple-500/5 to-transparent rounded-full blur-3xl" />
+      </div>
+
+      {/* Grid Pattern */}
       <div
         className={cn(
-          "pointer-events-none absolute inset-0 [background-size:40px_40px] select-none",
-          "[background-image:linear-gradient(to_right,#171717_1px,transparent_1px),linear-gradient(to_bottom,#171717_1px,transparent_1px)]",
+          "pointer-events-none absolute inset-0 [background-size:60px_60px] select-none opacity-[0.03]",
+          "[background-image:linear-gradient(to_right,currentColor_1px,transparent_1px),linear-gradient(to_bottom,currentColor_1px,transparent_1px)]",
         )}
       />
 
       <Spotlight
         className="-top-40 left-0 md:-top-20 md:left-60"
-        fill="white"
+        fill="currentColor"
       />
-      <div className="relative z-10 mx-auto w-full max-w-7xl p-4 pt-20 md:pt-0">
-        <h1 className="bg-opacity-50 bg-gradient-to-b from-neutral-50 to-neutral-400 bg-clip-text text-center text-4xl font-bold text-transparent md:text-7xl">
-          Gravity <br /> Hostel Living Redifined.
+
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-32 md:py-40 flex flex-col items-center justify-center">
+        {/* Badge */}
+        <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-card/50 backdrop-blur-sm px-4 py-2 text-sm text-muted-foreground">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+          </span>
+          Trusted by 500+ Students Across Pakistan
+        </div>
+
+        {/* Main Heading */}
+        <h1 className="text-center text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
+          <span className="block">Next-Generation</span>
+          <span className="block mt-2 bg-gradient-to-r from-primary via-blue-500 to-purple-600 bg-clip-text text-transparent">
+            Hostel Management
+          </span>
         </h1>
-        <p className="mx-auto mt-4 max-w-lg text-center text-base font-normal text-neutral-300">
-          Spotlight effect is a great way to draw attention to a specific part
-          of the page. Here, we are drawing the attention towards the text
-          section of the page. I don&apos;t know why but I&apos;m running out of
-          copy.
+
+        {/* Subheading */}
+        <p className="mx-auto mt-6 max-w-2xl text-center text-lg text-muted-foreground md:text-xl leading-relaxed">
+          Experience the future of student living with AI-powered management,
+          seamless automation, and enterprise-grade security. Built for scale,
+          designed for comfort.
         </p>
+
+        {/* CTA Buttons */}
+        <div className="mt-10 flex flex-col sm:flex-row gap-4 items-center justify-center">
+          <Button asChild size="lg" className="h-12 px-8 text-base font-medium rounded-full shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all">
+            <Link href="/login">
+              Get Started Free
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="h-12 px-8 text-base font-medium rounded-full border-border hover:bg-muted/50 transition-all">
+            <Link href="/home/contact">
+              <Play className="mr-2 h-4 w-4" />
+              Schedule Demo
+            </Link>
+          </Button>
+        </div>
+
+        {/* Trust Indicators */}
+        <div className="mt-16 flex flex-col items-center">
+          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-4">Powered by Industry Leaders</p>
+          <div className="flex items-center gap-8 opacity-50">
+            <div className="text-xl font-bold text-muted-foreground">MongoDB</div>
+            <div className="text-xl font-bold text-muted-foreground">Next.js</div>
+            <div className="text-xl font-bold text-muted-foreground">Vercel</div>
+            <div className="text-xl font-bold text-muted-foreground hidden sm:block">OpenAI</div>
+          </div>
+        </div>
       </div>
     </div>
   );

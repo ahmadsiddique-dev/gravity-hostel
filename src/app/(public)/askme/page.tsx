@@ -5,7 +5,7 @@ import { ArrowUp, Copy, Check, Sparkles, AlertCircle, RefreshCcw } from "lucide-
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport, TextUIPart } from "ai"; 
+import { DefaultChatTransport, TextUIPart } from "ai";
 import { ThinkingLoader } from "@/components/chat/Loader";
 import { cn } from "@/lib/utils";
 import ReactMarkdown from "react-markdown";
@@ -34,10 +34,10 @@ export default function ChatInterface() {
     if (!input.trim() || isTyping) return;
 
     const userMessage = input;
-    setInput(""); 
+    setInput("");
 
     try {
-      await sendMessage({ text: userMessage }); 
+      await sendMessage({ text: userMessage });
     } catch (err) {
       console.error("Saify failed to respond:", err);
     }
@@ -80,7 +80,7 @@ export default function ChatInterface() {
                 {m.parts.map((part, i) => (
                   <React.Fragment key={i}>
                     {part.type === "text" && <ReactMarkdown>{part.text}</ReactMarkdown>}
-                    
+
                     {part.type === "reasoning" && (
                       <div className="text-xs italic opacity-60 mb-2 p-3 border-l-2 bg-muted/20 rounded-r-lg not-prose">
                         <span className="block font-bold not-italic mb-1 opacity-100 uppercase tracking-tighter">Thinking Process:</span>
@@ -111,9 +111,9 @@ export default function ChatInterface() {
               <p className="font-medium">Something went wrong</p>
               <p className="opacity-80">{error?.message || "Check your connection."}</p>
             </div>
-            <Button 
-              variant="ghost" 
-              size="sm" 
+            <Button
+              variant="ghost"
+              size="sm"
               className="gap-2"
               onClick={() => {
                 const lastUserMsg = messages.filter(m => m.role === 'user').pop();
@@ -125,10 +125,10 @@ export default function ChatInterface() {
             </Button>
           </div>
         )}
-        
+
         <div ref={messagesEndRef} className="h-4" />
       </div>
-      
+
       <form onSubmit={handleSend} className="relative group bg-muted/40 border border-border rounded-[28px] p-2 transition-all focus-within:ring-2 focus-within:ring-blue-500/20">
         <div className="flex items-end gap-2 px-2">
           <Textarea
