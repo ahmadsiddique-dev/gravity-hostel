@@ -1,14 +1,21 @@
 "use client"
+import * as React from "react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Switch } from "@/components/ui/switch"
+import { useTheme } from "next-themes"
 
 export function SiteHeader() {
+  const { setTheme, resolvedTheme } = useTheme()
+  const [mounted, setMounted] = React.useState(false)
 
-  const handleTheme = () => {
-    const classes = document.querySelector("body")?.classList
-    classes?.toggle("dark")
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const handleTheme = (checked: boolean) => {
+    setTheme(checked ? "dark" : "light")
   }
 
   return (
@@ -21,8 +28,12 @@ export function SiteHeader() {
         />
         {/* <h1 className="text-base font-medium">Welcome, Ahmad</h1> */}
         <div className="ml-auto flex items-center gap-2">
-          <p>Theme</p>
-          <Switch onCheckedChange={handleTheme} />
+          <p className="text-sm font-medium">Dark Mode</p>
+          <Switch
+            checked={mounted && resolvedTheme === "dark"}
+            onCheckedChange={handleTheme}
+            disabled={!mounted}
+          />
           {/* <Button variant="ghost" asChild size="sm" className="hidden sm:flex">
           </Button> */}
         </div>

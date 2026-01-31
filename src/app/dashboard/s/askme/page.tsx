@@ -160,7 +160,7 @@ export default function ChatInterface() {
                     </div>
                   )}
                   <div className={cn(
-                    "prose prose-sm dark:prose-invert max-w-none break-words leading-relaxed",
+                    "prose prose-sm dark:prose-invert max-w-none break-words leading-relaxed [&>p]:my-1 [&>p:last-child]:mb-0 [&>p:first-child]:mt-0",
                     m.role === "user" && "prose-invert"
                   )}>
                     {m.parts.map((part, i) => (

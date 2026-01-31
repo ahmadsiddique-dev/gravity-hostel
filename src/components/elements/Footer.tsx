@@ -1,9 +1,17 @@
-import React from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin, ArrowUpRight } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin, ArrowUpRight, Sun, Moon, Monitor } from 'lucide-react';
+import { useTheme } from 'next-themes';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const footerLinks = {
     product: [
@@ -135,17 +143,31 @@ const Footer = () => {
             <p className="text-[11px] text-muted-foreground">
               © {currentYear} Gravity Hostel Management. All rights reserved.
             </p>
-            {/* <div className="flex items-center gap-6">
-              {footerLinks.legal.map((link, i) => (
-                <Link
-                  key={i}
-                  href={link.href}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </div> */}
+            <div className="flex items-center gap-4">
+              <span className="text-xs text-muted-foreground">Appearance</span>
+              <div className="flex p-0.5 rounded-lg bg-muted border border-border">
+                {[
+                  { value: "light", icon: Sun, label: "Light" },
+                  { value: "dark", icon: Moon, label: "Dark" },
+                  { value: "system", icon: Monitor, label: "System" },
+                ].map((item) => (
+                  <button
+                    key={item.value}
+                    onClick={() => setTheme(item.value)}
+                    className={`
+                      p-1.5 rounded-md transition-all flex items-center justify-center
+                      ${mounted && theme === item.value
+                        ? "bg-background text-primary shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
+                      }
+                    `}
+                    title={item.label}
+                  >
+                    <item.icon size={14} />
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
