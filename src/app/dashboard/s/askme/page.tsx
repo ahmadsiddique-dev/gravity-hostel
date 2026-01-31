@@ -99,8 +99,8 @@ export default function ChatInterface() {
       {!hasMessages && !isTyping && (
         <div className="flex flex-col items-center justify-center flex-1 px-4 py-8 space-y-4 animate-in fade-in duration-500">
           <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 blur-3xl rounded-full" />
-            <div className="relative p-4 rounded-2xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20">
+            <div className="absolute inset-0 bg-linear-to-r from-blue-500/20 to-purple-500/20 blur-3xl rounded-full" />
+            <div className="relative p-4 rounded-2xl bg-linear-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20">
               <MessageSquare className="w-10 h-10 sm:w-12 sm:h-12 text-blue-500" />
             </div>
           </div>
@@ -145,13 +145,13 @@ export default function ChatInterface() {
                   className={cn(
                     "max-w-[90%] sm:max-w-[85%] px-4 py-3 rounded-2xl transition-all",
                     m.role === "user"
-                      ? "bg-gradient-to-br from-slate-600 to-slate-700 text-white rounded-br-md shadow-lg shadow-slate-500/15"
+                      ? "bg-linear-to-br from-slate-600 to-slate-700 text-white rounded-br-md shadow-lg shadow-slate-500/15"
                       : "bg-muted/50 backdrop-blur-sm border border-border/50 text-foreground rounded-bl-md",
                   )}
                 >
                   {m.role === "assistant" && (
                     <div className="flex items-center gap-2 mb-2">
-                      <div className="p-1 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20">
+                      <div className="p-1 rounded-full bg-linear-to-br from-blue-500/20 to-purple-500/20">
                         <Sparkles className="w-3.5 h-3.5 text-blue-500" />
                       </div>
                       <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
@@ -160,7 +160,7 @@ export default function ChatInterface() {
                     </div>
                   )}
                   <div className={cn(
-                    "prose prose-sm dark:prose-invert max-w-none break-words leading-relaxed [&>p]:my-1 [&>p:last-child]:mb-0 [&>p:first-child]:mt-0",
+                    "prose prose-sm dark:prose-invert max-w-none wrap-break-word leading-relaxed [&>p]:my-1 [&>p:last-child]:mb-0 [&>p:first-child]:mt-0",
                     m.role === "user" && "prose-invert"
                   )}>
                     {m.parts.map((part, i) => (
@@ -252,7 +252,7 @@ export default function ChatInterface() {
 
       {/* Sticky Input Form - Always at bottom */}
       <div
-        className="shrink-0 bg-gradient-to-t from-background via-background to-background/80 pt-3 pb-4 px-3 sm:px-4 md:px-6 border-t border-border/30"
+        className="shrink-0 bg-linear-to-t from-background via-background to-background/80 pt-3 pb-4 px-3 sm:px-4 md:px-6 border-t border-border/30"
         style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
       >
         <form
@@ -273,7 +273,7 @@ export default function ChatInterface() {
                   <SelectValue placeholder="Model" />
                 </span>
               </SelectTrigger>
-              <SelectContent align="start" className="min-w-[140px]">
+              <SelectContent align="start" className="min-w-35">
                 {Object.entries(modelConfig).map(([key, config]) => (
                   <SelectItem key={key} value={key} className="py-2">
                     <div className="flex items-center gap-2">
@@ -302,7 +302,7 @@ export default function ChatInterface() {
                 }
               }}
               disabled={isTyping}
-              className="flex-1 min-h-[44px] max-h-36 w-full bg-transparent border-0 focus-visible:ring-0 resize-none py-3 text-sm placeholder:text-muted-foreground/60"
+              className="flex-1 min-h-11 max-h-36 w-full bg-transparent border-0 focus-visible:ring-0 resize-none py-3 text-sm placeholder:text-muted-foreground/60"
               rows={1}
             />
 
@@ -313,7 +313,7 @@ export default function ChatInterface() {
               className={cn(
                 "rounded-xl h-10 w-10 p-0 shrink-0 transition-all duration-200 active:scale-95",
                 input.trim() && !isTyping
-                  ? "bg-gradient-to-br from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white shadow-lg shadow-slate-500/20"
+                  ? "bg-linear-to-br from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white shadow-lg shadow-slate-500/20"
                   : "bg-muted text-muted-foreground",
               )}
             >
